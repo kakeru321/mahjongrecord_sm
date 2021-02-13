@@ -305,18 +305,6 @@ class _MemberEveryState extends State<MemberEvery> {
       color: Colors.lightGreenAccent,
       child: Column(
         children: [
-/*          Container(
-            color: Colors.limeAccent,
-            child: ListTile(
-              title: Text(
-                "${_pointList[position].intTimeStamp}",
-                style: TextStyle(fontSize: 14.0, color: Colors.blueGrey),
-              ),
-              onLongPress: () =>
-                  _deletePointScore(_pointList[position], _scoreList[position]),
-              //   onTap: () => _editMember(_memberList[position]),
-            ),
-          ),*/
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -354,7 +342,7 @@ class _MemberEveryState extends State<MemberEvery> {
                   children: [
                     Center(
                       child: Text(
-                        "`平均順位",
+                        "平均順位",
                         style: TextStyle(fontSize: 8.0),
                       ),
                     ),

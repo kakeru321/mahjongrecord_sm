@@ -84,9 +84,31 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
   }
 
   _deleteMember(Member selectedMember) async {
-    await database.deleteMember(selectedMember);
-    Toast.show("削除完了しました", context);
-    _getAllMember();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        title: Text(selectedMember.strMemberName),
+        content: Text("削除しても良いですか？"),
+        actions: [
+          // ignore: deprecated_member_use
+          FlatButton(
+            onPressed: () async {
+              await database.deleteMember(selectedMember);
+              Toast.show("削除完了しました", context);
+              _getAllMember();
+              Navigator.pop(context);
+            },
+            child: Text("はい"),
+          ),
+          // ignore: deprecated_member_use
+          FlatButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("いいえ"),
+          )
+        ],
+      ),
+    );
   }
 
   _editMember(Member selectedMember) {

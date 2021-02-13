@@ -15,44 +15,8 @@ class RecordAddScreen extends StatefulWidget {
 }
 
 class _RecordAddScreenState extends State<RecordAddScreen> {
-/*  var firstMemberNameController = TextEditingController();
-  var secondMemberNameController = TextEditingController();
-  var thirdMemberNameController = TextEditingController();
-  var forthMemberNameController = TextEditingController();
-
-  var firstPointController = TextEditingController();
-  var secondPointController = TextEditingController();
-  var thirdPointController = TextEditingController();
-  var forthPointController = TextEditingController();
-
-  List<Member> _memberList = List();
-  List<DropdownMenuItem> _memberNameList = List();
-  List<String> _uniqueCheck = List();
-  String _selectedFirstMember;
-  String _selectedSecondMember;
-  String _selectedThirdMember;
-  String _selectedForthMember;
-
-  @override
-  void initState() {
-    super.initState();
-    _getAllMember();
-  }
-*/
   @override
   Widget build(BuildContext context) {
-    /*   final size = MediaQuery.of(context).size;
-    final padding = MediaQuery.of(context).padding;
-    var maxHeight = size.height - padding.top - padding.bottom;
-    var maxWidth = size.width - padding.left - padding.right;
-
-    // アプリ描画エリアの縦サイズを取得
-    if (Platform.isAndroid) {
-      maxHeight = size.height - kToolbarHeight;
-    } else if (Platform.isIOS) {
-      maxHeight = size.height;
-    }
-*/
     final List<TabInfo> _tabs = [
       TabInfo("　　 　　点数 　　　　", PointRecordAdd()),
       TabInfo("　　　チップ枚数　　　", ChipRecordAdd()),

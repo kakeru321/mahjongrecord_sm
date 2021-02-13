@@ -39,6 +39,10 @@ class _EditScreenState extends State<EditScreen> {
       child: Scaffold(
         backgroundColor: Colors.lightGreen,
         appBar: AppBar(
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios),
+              onPressed: () => _backToMemberAddScreen()),
+          automaticallyImplyLeading: true,
           title: Text(
             _titleText,
             style: TextStyle(

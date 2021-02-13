@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mahjong_record_sm/db/database.dart';
 import 'package:mahjong_record_sm/main.dart';
 import 'package:toast/toast.dart';
@@ -18,6 +19,8 @@ class _BoardEveryState extends State<BoardEvery> {
   List<Score> _scoreList = List();
 
   ScrollController _viewController = ScrollController();
+
+  get onPressed => null;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -202,10 +205,33 @@ class _BoardEveryState extends State<BoardEvery> {
   }
 
   _deletePointScore(Point selectedPoint, Score selectedScore) async {
-    await database.deletePoint(selectedPoint);
-    await database.deleteScore(selectedScore);
-    Toast.show("削除完了しました", context, duration: Toast.LENGTH_SHORT);
-    _getAllPoint();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        title: Text(
+            DateFormat("yyyy/MM/dd HH:mm").format(selectedPoint.intTimeStamp)),
+        content: Text("削除しても良いですか？"),
+        actions: [
+          // ignore: deprecated_member_use
+          FlatButton(
+            onPressed: () async {
+              await database.deletePoint(selectedPoint);
+              await database.deleteScore(selectedScore);
+              Toast.show("削除完了しました", context, duration: Toast.LENGTH_SHORT);
+              _getAllPoint();
+              Navigator.pop(context);
+            },
+            child: Text("はい"),
+          ),
+          // ignore: deprecated_member_use
+          FlatButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("いいえ"),
+          )
+        ],
+      ),
+    );
   }
 
   _card(int position) {
@@ -251,7 +277,8 @@ class _BoardEveryState extends State<BoardEvery> {
               child: SizedBox(
                 width: maxWidth,
                 child: Text(
-                  "${_pointList[position].intTimeStamp.year}-${_pointList[position].intTimeStamp.month}-${_pointList[position].intTimeStamp.day}, ${_pointList[position].intTimeStamp.hour}:${_pointList[position].intTimeStamp.minute}",
+                  DateFormat("yyyy/MM/dd HH:mm")
+                      .format(_pointList[position].intTimeStamp),
                   style: TextStyle(fontSize: 24.0, color: Colors.blueGrey),
                 ),
               ),
