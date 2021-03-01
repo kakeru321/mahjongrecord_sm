@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mahjong_record_sm/db/database.dart';
 import 'package:mahjong_record_sm/main.dart';
 import 'package:toast/toast.dart';
+import 'package:in_app_review/in_app_review.dart';
 
 class MemberEvery extends StatefulWidget {
   @override
@@ -11,33 +12,28 @@ class MemberEvery extends StatefulWidget {
 }
 
 class _MemberEveryState extends State<MemberEvery> {
-  List<int> _calcMemberNumberList = List();
+  List<int> _calcMemberNumberList = [];
+  List<Member> _memberList = [];
+  List<String> _memberNameList = [];
+
   int _calcSummaryScore1 = 0;
-  List<Member> _memberList = List();
-  List<String> _memberNameList = List();
-  List<int> _calcSummaryScore2 = List();
+  List<int> _calcSummaryScore2 = [];
+  List<Point> _pointList = [];
 
   int _calcMemberAverage = 0;
   int _countRecord = 0;
   double _conclusionAveragePlace = 0;
-  List<double> _conclusionAveragePlaceList = List();
+  List<double> _conclusionAveragePlaceList = [];
 
   int periodSelect = 1;
   int conclusionSelect = 2;
-  int _selectedIndex = 0;
 
-  List<Point> _pointList = List();
-  List<Score> _scoreList = List();
-
-  List<int> _conclusion = List();
+  List<Score> _scoreList = [];
+  List<int> _conclusion = [];
 
   ScrollController _viewController = ScrollController();
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  final InAppReview inAppReview = InAppReview.instance;
 
   @override
   void initState() {
@@ -45,6 +41,7 @@ class _MemberEveryState extends State<MemberEvery> {
     _getAllPoint();
     _getAllScore();
     _getAllMember();
+    _getReview();
   }
 
   @override
@@ -52,7 +49,6 @@ class _MemberEveryState extends State<MemberEvery> {
     final size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
     var maxHeight = size.height - padding.top - padding.bottom;
-    var maxWidth = size.width - padding.left - padding.right;
 
     // アプリ描画エリアの縦サイズを取得
     if (Platform.isAndroid) {
@@ -78,6 +74,7 @@ class _MemberEveryState extends State<MemberEvery> {
     );
   }
 
+  //ラジオボタン（期間）
   Widget _radioButtons() {
     return Card(
       elevation: 5.0,
@@ -179,6 +176,7 @@ class _MemberEveryState extends State<MemberEvery> {
     );
   }
 
+  //ラジオボタン（レート）
   Widget _conclusionRadioButtons() {
     return Card(
       elevation: 5.0,
@@ -262,6 +260,7 @@ class _MemberEveryState extends State<MemberEvery> {
     );
   }
 
+  //ラジオボタン（期間）の選択値
   _onRadioSelected(value) {
     periodSelect = value;
     _getAllMember();
@@ -269,6 +268,7 @@ class _MemberEveryState extends State<MemberEvery> {
     _getAllScore();
   }
 
+  //ラジオボタン（レート）の選択値
   _onConclusionRadioSelected(value) {
     conclusionSelect = value;
     _getAllMember();
@@ -276,27 +276,29 @@ class _MemberEveryState extends State<MemberEvery> {
     _getAllScore();
   }
 
+  //すべての素点を取得する。
   void _getAllPoint() async {
     _pointList = await database.allPoints;
     setState(() {});
   }
 
+  //すべての得点を取得する。
   void _getAllScore() async {
     _scoreList = await database.allScores;
   }
 
+  //すべての得点と素点をリスト化する。
   Widget _pointScoreListWidget() {
     return ListView.builder(
-        //      physics: const AlwaysScrollableScrollPhysics(),
         controller: _viewController,
         itemCount: _memberList.length,
         itemBuilder: (context, int position) => _pointItem(position));
   }
 
+  //リストの中身を定義する。
   Widget _pointItem(int position) {
     final size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
-    var maxHeight = size.height - padding.top - padding.bottom;
     var maxWidth = size.width - padding.left - padding.right;
 
     return Card(
@@ -375,13 +377,14 @@ class _MemberEveryState extends State<MemberEvery> {
     );
   }
 
-  //start
+  //すべてのメンバーを取得する。
   void _getAllMember() async {
     _memberList = await database.allMembers;
     setMemberNameList();
     setState(() {});
   }
 
+  //すべてのメンバーをリスト化する。
   void setMemberNameList() {
     _memberNameList.removeRange(0, _memberNameList.length);
 
@@ -394,6 +397,7 @@ class _MemberEveryState extends State<MemberEvery> {
     _calcMemberAveragePlace();
   }
 
+  //メンバーの得点を計算しリスト化する。
   void _calcMemberScore() {
     _calcSummaryScore2.removeRange(0, _calcSummaryScore2.length);
     for (int i = 0; i < _memberNameList.length; i++) {
@@ -441,6 +445,7 @@ class _MemberEveryState extends State<MemberEvery> {
     _conclusionScore();
   }
 
+  //メンバーの平均順位を計算しリスト化する。
   void _calcMemberAveragePlace() {
     _conclusionAveragePlaceList.removeRange(
         0, _conclusionAveragePlaceList.length);
@@ -493,6 +498,7 @@ class _MemberEveryState extends State<MemberEvery> {
     setState(() {});
   }
 
+  //メンバー名が空欄でないことの確認をする。
   _nullCheckAveragePlaceList(position) {
     double _roundAveragePlace = 0;
     if (_conclusionAveragePlaceList[position].isNaN) {
@@ -510,6 +516,7 @@ class _MemberEveryState extends State<MemberEvery> {
     }
   }
 
+  //レートを計算する市リスト化する。
   void _conclusionScore() {
     _conclusion.removeRange(0, _conclusion.length);
     for (int i = 0; i < _calcSummaryScore2.length; i++) {
@@ -530,5 +537,11 @@ class _MemberEveryState extends State<MemberEvery> {
           duration: Toast.LENGTH_SHORT);
     }
     setState(() {});
+  }
+
+  void _getReview() async {
+    if (await inAppReview.isAvailable()) {
+      inAppReview.requestReview();
+    }
   }
 }
