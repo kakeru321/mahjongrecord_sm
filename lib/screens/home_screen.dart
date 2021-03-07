@@ -5,6 +5,8 @@ import 'package:mahjong_record_sm/parts/buttom_with_icon.dart';
 import 'package:toast/toast.dart';
 import 'record_inquiry_screen.dart';
 
+//★この画面はまだ使用されていない★
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -31,10 +33,11 @@ class _HomeScreenState extends State<HomeScreen> {
       maxHeight = size.height;
     }
 
-    // Resultエリアの縦サイズ
+/*    // Resultエリアの縦サイズ
     final titleAreaHeight = maxHeight * (45 / 100);
     // テンキーエリアの縦サイズ
     final buttonAreaHeight = maxHeight * (55 / 100);
+*/
     return Scaffold(
       backgroundColor: Colors.lightGreen,
       body: SingleChildScrollView(

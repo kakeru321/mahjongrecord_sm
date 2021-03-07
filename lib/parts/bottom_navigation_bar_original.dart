@@ -19,25 +19,35 @@ class BottomNavigationBarOriginal extends StatelessWidget {
                 color: Colors.white,
               ),
               onPressed: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => RecordInquiryScreen())),
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RecordInquiryScreen(),
+                ),
+              ),
             ),
             IconButton(
               icon: Icon(
                 Icons.photo_filter,
                 color: Colors.white,
               ),
-              onPressed: () => Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => RecordAddScreen())),
+              onPressed: () => Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RecordAddScreen(),
+                ),
+              ),
             ),
             IconButton(
               icon: Icon(
                 Icons.person_add_sharp,
                 color: Colors.white,
               ),
-              onPressed: () => Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => MemberAddScreen())),
+              onPressed: () => Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MemberAddScreen(),
+                ),
+              ),
             ),
           ],
         ),

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mahjong_record_sm/db/database.dart';
 import 'package:mahjong_record_sm/main.dart';
-import 'package:mahjong_record_sm/parts/bottom_navigation_bar_original.dart';
 import 'package:mahjong_record_sm/parts/buttom_with_icon.dart';
 import 'package:toast/toast.dart';
 
@@ -19,13 +18,14 @@ class _ChipRecordAddState extends State<ChipRecordAdd> {
   var thirdTipController = TextEditingController();
   var forthTipController = TextEditingController();
 
-  List<Member> _memberList = List();
-  List<DropdownMenuItem> _memberNameList = List();
-  List<String> _uniqueCheck = List();
+  List<Member> _memberList = [];
+  List<DropdownMenuItem> _memberNameList = [];
+  List<String> _uniqueCheck = [];
   String _selectedPlayer1Name;
   String _selectedPlayer2Name;
   String _selectedPlayer3Name;
   String _selectedPlayer4Name;
+
   @override
   void initState() {
     super.initState();
@@ -37,7 +37,6 @@ class _ChipRecordAddState extends State<ChipRecordAdd> {
     final size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
     var maxHeight = size.height - padding.top - padding.bottom;
-    var maxWidth = size.width - padding.left - padding.right;
 
     // アプリ描画エリアの縦サイズを取得
     if (Platform.isAndroid) {
@@ -45,112 +44,120 @@ class _ChipRecordAddState extends State<ChipRecordAdd> {
     } else if (Platform.isIOS) {
       maxHeight = size.height;
     }
-    return SingleChildScrollView(
-        child: Column(
-      children: [
-        SizedBox(
-          height: maxHeight * (2 / 100),
-        ),
-        Column(
-          children: [
-            Text(
-              "Player1",
-              style: TextStyle(fontSize: 28.0, color: Colors.white),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _player1Name(),
-                _player1Chip(),
-                Text(
-                  "枚",
-                  style: TextStyle(fontSize: 28.0, color: Colors.white),
-                )
-              ],
-            )
-          ],
-        ),
-        SizedBox(
-          height: maxHeight * (2 / 100),
-        ),
-        Column(
-          children: [
-            Text(
-              "Player2",
-              style: TextStyle(fontSize: 28.0, color: Colors.white),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _player2Name(),
-                _player2Chip(),
-                Text(
-                  "枚",
-                  style: TextStyle(fontSize: 28.0, color: Colors.white),
-                )
-              ],
-            )
-          ],
-        ),
-        SizedBox(
-          height: maxHeight * (2 / 100),
-        ),
-        Column(
-          children: [
-            Text(
-              "Player3",
-              style: TextStyle(fontSize: 28.0, color: Colors.white),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _player3Name(),
-                _player3Chip(),
-                Text(
-                  "枚",
-                  style: TextStyle(fontSize: 28.0, color: Colors.white),
-                )
-              ],
-            )
-          ],
-        ),
-        SizedBox(
-          height: maxHeight * (2 / 100),
-        ),
-        Column(
-          children: [
-            Text(
-              "Player4",
-              style: TextStyle(fontSize: 28.0, color: Colors.white),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _player4Name(),
-                _player4Chip(),
-                Text(
-                  "枚",
-                  style: TextStyle(fontSize: 28.0, color: Colors.white),
-                )
-              ],
-            )
-          ],
-        ),
-        SizedBox(
-          height: maxHeight * (3 / 100),
-        ),
-        ButtonWithIcon(
-          onPressed: () => _inputTipRecord(),
-          icon: Icon(
-            Icons.done_outline,
-            color: Colors.white,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: Colors.lightGreen,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: maxHeight * (2 / 100),
+              ),
+              Column(
+                children: [
+                  Text(
+                    "Player1",
+                    style: TextStyle(fontSize: 28.0, color: Colors.white),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _player1Name(),
+                      _player1Chip(),
+                      Text(
+                        "枚",
+                        style: TextStyle(fontSize: 28.0, color: Colors.white),
+                      )
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(
+                height: maxHeight * (2 / 100),
+              ),
+              Column(
+                children: [
+                  Text(
+                    "Player2",
+                    style: TextStyle(fontSize: 28.0, color: Colors.white),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _player2Name(),
+                      _player2Chip(),
+                      Text(
+                        "枚",
+                        style: TextStyle(fontSize: 28.0, color: Colors.white),
+                      )
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(
+                height: maxHeight * (2 / 100),
+              ),
+              Column(
+                children: [
+                  Text(
+                    "Player3",
+                    style: TextStyle(fontSize: 28.0, color: Colors.white),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _player3Name(),
+                      _player3Chip(),
+                      Text(
+                        "枚",
+                        style: TextStyle(fontSize: 28.0, color: Colors.white),
+                      )
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(
+                height: maxHeight * (2 / 100),
+              ),
+              Column(
+                children: [
+                  Text(
+                    "Player4",
+                    style: TextStyle(fontSize: 28.0, color: Colors.white),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _player4Name(),
+                      _player4Chip(),
+                      Text(
+                        "枚",
+                        style: TextStyle(fontSize: 28.0, color: Colors.white),
+                      )
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(
+                height: maxHeight * (3 / 100),
+              ),
+              ButtonWithIcon(
+                onPressed: () => _inputTipRecord(),
+                icon: Icon(
+                  Icons.done_outline,
+                  color: Colors.white,
+                ),
+                label: "登録",
+              ),
+            ],
           ),
-          label: "登録",
         ),
-      ],
-    ));
+      ),
+    );
   }
 
+  //一人目の名前を登録する。
   _player1Name() {
     return Container(
       decoration: BoxDecoration(
@@ -174,12 +181,13 @@ class _ChipRecordAddState extends State<ChipRecordAdd> {
     );
   }
 
+  //一人目のチップ枚数を登録する。
   _player1Chip() {
     return SizedBox(
       width: 100,
       child: TextField(
         controller: firstTipController,
-        keyboardType: TextInputType.number,
+        keyboardType: TextInputType.text,
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 28.0, color: Colors.blueGrey),
         inputFormatters: [
@@ -189,6 +197,7 @@ class _ChipRecordAddState extends State<ChipRecordAdd> {
     );
   }
 
+  //二人目の名前を登録する。
   _player2Name() {
     return Container(
       decoration: BoxDecoration(
@@ -212,12 +221,13 @@ class _ChipRecordAddState extends State<ChipRecordAdd> {
     );
   }
 
+  //二人目のチップ枚数を登録する。
   _player2Chip() {
     return SizedBox(
       width: 100,
       child: TextField(
         controller: secondTipController,
-        keyboardType: TextInputType.number,
+        keyboardType: TextInputType.text,
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 28.0, color: Colors.blueGrey),
         inputFormatters: [
@@ -227,6 +237,7 @@ class _ChipRecordAddState extends State<ChipRecordAdd> {
     );
   }
 
+  //三人目の名前を登録する。
   _player3Name() {
     return Container(
       decoration: BoxDecoration(
@@ -250,12 +261,13 @@ class _ChipRecordAddState extends State<ChipRecordAdd> {
     );
   }
 
+  //三人目のチップ枚数を登録する。
   _player3Chip() {
     return SizedBox(
       width: 100,
       child: TextField(
         controller: thirdTipController,
-        keyboardType: TextInputType.number,
+        keyboardType: TextInputType.text,
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 28.0, color: Colors.blueGrey),
         inputFormatters: [
@@ -265,6 +277,7 @@ class _ChipRecordAddState extends State<ChipRecordAdd> {
     );
   }
 
+  //四人目の名前を登録する。
   _player4Name() {
     return Container(
       decoration: BoxDecoration(
@@ -288,12 +301,13 @@ class _ChipRecordAddState extends State<ChipRecordAdd> {
     );
   }
 
+  //四人目のチップ枚数を登録する。
   _player4Chip() {
     return SizedBox(
       width: 100,
       child: TextField(
         controller: forthTipController,
-        keyboardType: TextInputType.number,
+        keyboardType: TextInputType.text,
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 28.0, color: Colors.blueGrey),
         inputFormatters: [
@@ -303,12 +317,14 @@ class _ChipRecordAddState extends State<ChipRecordAdd> {
     );
   }
 
+  //すべてのメンバー名を登録する。
   void _getAllMember() async {
     _memberList = await database.allMembers;
     setMemberNameList();
     setState(() {});
   }
 
+  //すべてのメンバー名をリスト化する。
   void setMemberNameList() {
     _memberNameList.removeRange(0, _memberNameList.length);
     for (int position = 0; position < _memberList.length; position++) {
@@ -324,6 +340,7 @@ class _ChipRecordAddState extends State<ChipRecordAdd> {
     }
   }
 
+  //チップ枚数を登録する。
   _inputTipRecord() async {
     if (_selectedPlayer1Name == "" ||
         firstTipController.text == "" ||

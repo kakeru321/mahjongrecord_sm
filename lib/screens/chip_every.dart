@@ -11,26 +11,19 @@ class ChipEvery extends StatefulWidget {
 }
 
 class _ChipEveryState extends State<ChipEvery> {
-  List<int> _calcMemberNumberList = List();
+  List<int> _calcMemberNumberList = [];
   int _calcSummaryScore1 = 0;
-  List<Member> _memberList = List();
-  List<String> _memberNameList = List();
-  List<int> _calcSummaryScore2 = List();
+  List<Member> _memberList = [];
+  List<String> _memberNameList = [];
+  List<int> _calcSummaryScore2 = [];
 
   int periodSelect = 1;
   int conclusionSelect = 2;
-  int _selectedIndex = 0;
 
-  List<Tip> _tipList = List();
-  List<int> _conclusion = List();
+  List<Tip> _tipList = [];
+  List<int> _conclusion = [];
 
   ScrollController _viewController = ScrollController();
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   void initState() {
@@ -44,7 +37,6 @@ class _ChipEveryState extends State<ChipEvery> {
     final size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
     var maxHeight = size.height - padding.top - padding.bottom;
-    var maxWidth = size.width - padding.left - padding.right;
 
     // アプリ描画エリアの縦サイズを取得
     if (Platform.isAndroid) {
@@ -70,6 +62,7 @@ class _ChipEveryState extends State<ChipEvery> {
     );
   }
 
+  //ラジオボタン（期間）
   Widget _radioButtons() {
     return Card(
       elevation: 5.0,
@@ -171,6 +164,7 @@ class _ChipEveryState extends State<ChipEvery> {
     );
   }
 
+  //ラジオボタン（レート）
   Widget _conclusionRadioButtons() {
     return Card(
       elevation: 5.0,
@@ -254,22 +248,26 @@ class _ChipEveryState extends State<ChipEvery> {
     );
   }
 
+  //ラジオボタン（期間）の選択値
   _onRadioSelected(value) {
     periodSelect = value;
     _getAllMember();
     _getAllTip();
   }
 
+  //ラジオボタン（レート）の選択値
   _onConclusionRadioSelected(value) {
     conclusionSelect = value;
     _getAllMember();
     _getAllTip();
   }
 
+  //すべてのチップ枚数を取得する。
   void _getAllTip() async {
     _tipList = await database.allTips;
   }
 
+  //すべてのチップをリストにする。
   Widget _tipListWidget() {
     return ListView.builder(
         controller: _viewController,
@@ -277,10 +275,10 @@ class _ChipEveryState extends State<ChipEvery> {
         itemBuilder: (context, int position) => _tipItem(position));
   }
 
+  //カードの中身を定義
   Widget _tipItem(int position) {
     final size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
-    var maxHeight = size.height - padding.top - padding.bottom;
     var maxWidth = size.width - padding.left - padding.right;
 
     return Card(
@@ -297,7 +295,7 @@ class _ChipEveryState extends State<ChipEvery> {
                 child: Center(
                   child: Text(
                     "${_memberList[position].strMemberName}",
-                    style: TextStyle(fontSize: 18.0),
+                    style: TextStyle(fontSize: 20.0),
                   ),
                 ),
               ),
@@ -314,7 +312,7 @@ class _ChipEveryState extends State<ChipEvery> {
                     Center(
                       child: Text(
                         "${_calcSummaryScore2[position]}",
-                        style: TextStyle(fontSize: 14.0),
+                        style: TextStyle(fontSize: 16.0),
                       ),
                     ),
                   ],
@@ -331,7 +329,10 @@ class _ChipEveryState extends State<ChipEvery> {
                       ),
                     ),
                     Center(
-                      child: Text("${_conclusion[position]}"),
+                      child: Text(
+                        "${_conclusion[position]}",
+                        style: TextStyle(fontSize: 16.0),
+                      ),
                     ),
                   ],
                 ),
@@ -343,13 +344,14 @@ class _ChipEveryState extends State<ChipEvery> {
     );
   }
 
-  //start
+  //すべてのメンバーを取得する。
   void _getAllMember() async {
     _memberList = await database.allMembers;
     setMemberNameList();
     setState(() {});
   }
 
+  //すべてのメンバーをリスト化する。
   void setMemberNameList() {
     _memberNameList.removeRange(0, _memberNameList.length);
 
@@ -361,6 +363,7 @@ class _ChipEveryState extends State<ChipEvery> {
     _calcMemberTip();
   }
 
+  //メンバーごとにチップ収支を集計
   void _calcMemberTip() {
     _calcSummaryScore2.removeRange(0, _calcSummaryScore2.length);
     for (int i = 0; i < _memberNameList.length; i++) {
@@ -408,6 +411,7 @@ class _ChipEveryState extends State<ChipEvery> {
     _conclusionScore();
   }
 
+  //得点を計算しリスト化する。
   void _conclusionScore() {
     _conclusion.removeRange(0, _conclusion.length);
     for (int i = 0; i < _calcSummaryScore2.length; i++) {

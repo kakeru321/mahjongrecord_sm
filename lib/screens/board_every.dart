@@ -13,20 +13,11 @@ class BoardEvery extends StatefulWidget {
 
 class _BoardEveryState extends State<BoardEvery> {
   int periodSelect = 1;
-  int _selectedIndex = 0;
 
-  List<Point> _pointList = List();
-  List<Score> _scoreList = List();
+  List<Point> _pointList = [];
+  List<Score> _scoreList = [];
 
   ScrollController _viewController = ScrollController();
-
-  get onPressed => null;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   void initState() {
@@ -40,7 +31,6 @@ class _BoardEveryState extends State<BoardEvery> {
     final size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
     var maxHeight = size.height - padding.top - padding.bottom;
-    var maxWidth = size.width - padding.left - padding.right;
 
     // アプリ描画エリアの縦サイズを取得
     if (Platform.isAndroid) {
@@ -59,13 +49,14 @@ class _BoardEveryState extends State<BoardEvery> {
               height: maxHeight * (1 / 100),
             ),
             _radioButtons(),
-            SizedBox(height: maxHeight - 220.0, child: _pointScoreListWidget()),
+            SizedBox(height: maxHeight - 335.0, child: _pointScoreListWidget()),
           ],
         ),
       ),
     );
   }
 
+  //ラジオボタン
   Widget _radioButtons() {
     return Card(
       elevation: 5.0,
@@ -167,21 +158,25 @@ class _BoardEveryState extends State<BoardEvery> {
     );
   }
 
+  //ラジオボタン選択値
   _onRadioSelected(value) {
     setState(() {
       periodSelect = value;
     });
   }
 
+  //すべての素点を取得する。
   void _getAllPoint() async {
     _pointList = await database.allPoints;
     setState(() {});
   }
 
+  //すべての得点を取得する。
   void _getAllScore() async {
     _scoreList = await database.allScores;
   }
 
+  //すべての素点と得点をリストにする。
   Widget _pointScoreListWidget() {
     return ListView.builder(
         //      physics: const AlwaysScrollableScrollPhysics(),
@@ -190,12 +185,8 @@ class _BoardEveryState extends State<BoardEvery> {
         itemBuilder: (context, int position) => _pointItem(position));
   }
 
+  //すべての得点と素点をカードで並べる
   Widget _pointItem(int position) {
-    final size = MediaQuery.of(context).size;
-    final padding = MediaQuery.of(context).padding;
-    var maxHeight = size.height - padding.top - padding.bottom;
-    var maxWidth = size.width - padding.left - padding.right;
-
     return Card(
       elevation: 5.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -204,40 +195,10 @@ class _BoardEveryState extends State<BoardEvery> {
     );
   }
 
-  _deletePointScore(Point selectedPoint, Score selectedScore) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => AlertDialog(
-        title: Text(
-            DateFormat("yyyy/MM/dd HH:mm").format(selectedPoint.intTimeStamp)),
-        content: Text("削除しても良いですか？"),
-        actions: [
-          // ignore: deprecated_member_use
-          FlatButton(
-            onPressed: () async {
-              await database.deletePoint(selectedPoint);
-              await database.deleteScore(selectedScore);
-              Toast.show("削除完了しました", context, duration: Toast.LENGTH_SHORT);
-              _getAllPoint();
-              Navigator.pop(context);
-            },
-            child: Text("はい"),
-          ),
-          // ignore: deprecated_member_use
-          FlatButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("いいえ"),
-          )
-        ],
-      ),
-    );
-  }
-
+  //カードの中身を定義
   _card(int position) {
     final size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
-    var maxHeight = size.height - padding.top - padding.bottom;
     var maxWidth = size.width - padding.left - padding.right;
 
     var _duration =
@@ -277,14 +238,13 @@ class _BoardEveryState extends State<BoardEvery> {
               child: SizedBox(
                 width: maxWidth,
                 child: Text(
-                  DateFormat("yyyy/MM/dd HH:mm")
+                  DateFormat("yyyy/MM/dd - EEE - HH:mm:ss")
                       .format(_pointList[position].intTimeStamp),
                   style: TextStyle(fontSize: 24.0, color: Colors.blueGrey),
                 ),
               ),
               onLongPress: () =>
                   _deletePointScore(_pointList[position], _scoreList[position]),
-              //   onTap: () => _editMember(_memberList[position]),
             ),
           ),
         ),
@@ -296,7 +256,7 @@ class _BoardEveryState extends State<BoardEvery> {
               child: Center(
                 child: Text(
                   "${_pointList[position].strFirstMemberName}",
-                  style: TextStyle(fontSize: 18.0),
+                  style: TextStyle(fontSize: 20.0),
                 ),
               ),
             ),
@@ -313,7 +273,7 @@ class _BoardEveryState extends State<BoardEvery> {
                   Center(
                     child: Text(
                       "${_pointList[position].intFirstPoint}",
-                      style: TextStyle(fontSize: 14.0),
+                      style: TextStyle(fontSize: 16.0),
                     ),
                   ),
                 ],
@@ -332,7 +292,7 @@ class _BoardEveryState extends State<BoardEvery> {
                   Center(
                     child: Text(
                       "${_scoreList[position].intFirstScore}",
-                      style: TextStyle(fontSize: 14.0),
+                      style: TextStyle(fontSize: 16.0),
                     ),
                   ),
                 ],
@@ -354,7 +314,7 @@ class _BoardEveryState extends State<BoardEvery> {
               child: Center(
                 child: Text(
                   "${_pointList[position].strSecondMemberName}",
-                  style: TextStyle(fontSize: 18.0),
+                  style: TextStyle(fontSize: 20.0),
                 ),
               ),
             ),
@@ -371,7 +331,7 @@ class _BoardEveryState extends State<BoardEvery> {
                   Center(
                     child: Text(
                       "${_pointList[position].intSecondPoint}",
-                      style: TextStyle(fontSize: 14.0),
+                      style: TextStyle(fontSize: 16.0),
                     ),
                   ),
                 ],
@@ -390,7 +350,7 @@ class _BoardEveryState extends State<BoardEvery> {
                   Center(
                     child: Text(
                       "${_scoreList[position].intSecondScore}",
-                      style: TextStyle(fontSize: 14.0),
+                      style: TextStyle(fontSize: 16.0),
                     ),
                   ),
                 ],
@@ -412,7 +372,7 @@ class _BoardEveryState extends State<BoardEvery> {
               child: Center(
                 child: Text(
                   "${_pointList[position].strThirdMemberName}",
-                  style: TextStyle(fontSize: 18.0),
+                  style: TextStyle(fontSize: 20.0),
                 ),
               ),
             ),
@@ -429,7 +389,7 @@ class _BoardEveryState extends State<BoardEvery> {
                   Center(
                     child: Text(
                       "${_pointList[position].intThirdPoint}",
-                      style: TextStyle(fontSize: 14.0),
+                      style: TextStyle(fontSize: 16.0),
                     ),
                   ),
                 ],
@@ -448,7 +408,7 @@ class _BoardEveryState extends State<BoardEvery> {
                   Center(
                     child: Text(
                       "${_scoreList[position].intThirdScore}",
-                      style: TextStyle(fontSize: 14.0),
+                      style: TextStyle(fontSize: 16.0),
                     ),
                   ),
                 ],
@@ -470,7 +430,7 @@ class _BoardEveryState extends State<BoardEvery> {
               child: Center(
                 child: Text(
                   "${_pointList[position].strForthMemberName}",
-                  style: TextStyle(fontSize: 18.0),
+                  style: TextStyle(fontSize: 20.0),
                 ),
               ),
             ),
@@ -487,7 +447,7 @@ class _BoardEveryState extends State<BoardEvery> {
                   Center(
                     child: Text(
                       "${_pointList[position].intForthPoint}",
-                      style: TextStyle(fontSize: 14.0),
+                      style: TextStyle(fontSize: 16.0),
                     ),
                   ),
                 ],
@@ -506,7 +466,7 @@ class _BoardEveryState extends State<BoardEvery> {
                   Center(
                     child: Text(
                       "${_scoreList[position].intForthScore}",
-                      style: TextStyle(fontSize: 14.0),
+                      style: TextStyle(fontSize: 16.0),
                     ),
                   ),
                 ],
@@ -514,13 +474,36 @@ class _BoardEveryState extends State<BoardEvery> {
             ),
           ],
         ),
-        Divider(
-          height: 3.0,
-          color: Colors.black54,
-          indent: 8.0,
-          endIndent: 8.0,
-        ),
       ],
+    );
+  }
+
+  //選択したデータを削除する。
+  _deletePointScore(Point selectedPoint, Score selectedScore) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        title: Text(
+            DateFormat("yyyy/MM/dd HH:mm").format(selectedPoint.intTimeStamp)),
+        content: Text("削除しても良いですか？"),
+        actions: [
+          FlatButton(
+            onPressed: () async {
+              await database.deletePoint(selectedPoint);
+              await database.deleteScore(selectedScore);
+              Toast.show("削除完了しました", context, duration: Toast.LENGTH_SHORT);
+              _getAllPoint();
+              Navigator.pop(context);
+            },
+            child: Text("はい"),
+          ),
+          FlatButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("いいえ"),
+          ),
+        ],
+      ),
     );
   }
 }

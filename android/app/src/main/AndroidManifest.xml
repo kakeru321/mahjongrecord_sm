@@ -10,7 +10,7 @@
         android:label="mahjong_record_sm"
         android:icon="@mipmap/launcher_icon">
         <activity
-            android:name="com.example.mahjong_record_sm.MainActivity"
+            android:name="mimim.shshsh.mahjong_record_sm.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

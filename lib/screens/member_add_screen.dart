@@ -12,7 +12,7 @@ class MemberAddScreen extends StatefulWidget {
 }
 
 class _MemberAddScreenState extends State<MemberAddScreen> {
-  List<Member> _memberList = List();
+  List<Member> _memberList = [];
 
   @override
   void initState() {
@@ -47,26 +47,30 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
     );
   }
 
+  //メンバー登録画面に遷移する。
   _addNewMember() {
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => EditScreen(
-                  status: EditStatus.ADD,
-                )));
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditScreen(),
+      ),
+    );
   }
 
+  //すべてのメンバーを取得する。
   void _getAllMember() async {
     _memberList = await database.allMembers;
     setState(() {});
   }
 
+  //すべてのメンバーをリスト化する。
   Widget _memberListWidget() {
     return ListView.builder(
         itemCount: _memberList.length,
         itemBuilder: (context, int position) => _memberItem(position));
   }
 
+  //カードの中身を定義
   Widget _memberItem(int position) {
     return Card(
       elevation: 5.0,
@@ -78,11 +82,11 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
           style: TextStyle(color: Colors.blueGrey),
         ),
         onLongPress: () => _deleteMember(_memberList[position]),
-//        onTap: () => _editMember(_memberList[position]),
       ),
     );
   }
 
+  //メンバーを削除する。
   _deleteMember(Member selectedMember) async {
     showDialog(
       context: context,
@@ -109,15 +113,5 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
         ],
       ),
     );
-  }
-
-  _editMember(Member selectedMember) {
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => EditScreen(
-                  status: EditStatus.EDIT,
-                  member: selectedMember,
-                )));
   }
 }

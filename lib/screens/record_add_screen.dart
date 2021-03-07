@@ -1,13 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:mahjong_record_sm/db/database.dart';
-import 'package:mahjong_record_sm/main.dart';
 import 'package:mahjong_record_sm/parts/bottom_navigation_bar_original.dart';
-import 'package:mahjong_record_sm/parts/buttom_with_icon.dart';
 import 'package:mahjong_record_sm/screens/chip_record_add.dart';
 import 'package:mahjong_record_sm/screens/point_record_add.dart';
-import 'package:toast/toast.dart';
 
 class RecordAddScreen extends StatefulWidget {
   @override

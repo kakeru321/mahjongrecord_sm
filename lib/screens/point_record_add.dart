@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mahjong_record_sm/db/database.dart';
 import 'package:mahjong_record_sm/main.dart';
-import 'package:mahjong_record_sm/parts/bottom_navigation_bar_original.dart';
 import 'package:mahjong_record_sm/parts/buttom_with_icon.dart';
 import 'package:toast/toast.dart';
 
@@ -24,9 +23,8 @@ class _PointRecordAddState extends State<PointRecordAdd> {
   var thirdPointController = TextEditingController();
   var forthPointController = TextEditingController();
 
-  List<Member> _memberList = List();
-  List<DropdownMenuItem> _memberNameList = List();
-  List<String> _uniqueCheck = List();
+  List<Member> _memberList = [];
+  List<DropdownMenuItem> _memberNameList = [];
   String _selectedFirstMember;
   String _selectedSecondMember;
   String _selectedThirdMember;
@@ -43,7 +41,6 @@ class _PointRecordAddState extends State<PointRecordAdd> {
     final size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
     var maxHeight = size.height - padding.top - padding.bottom;
-    var maxWidth = size.width - padding.left - padding.right;
 
     // アプリ描画エリアの縦サイズを取得
     if (Platform.isAndroid) {
@@ -51,165 +48,169 @@ class _PointRecordAddState extends State<PointRecordAdd> {
     } else if (Platform.isIOS) {
       maxHeight = size.height;
     }
-    return Scaffold(
-      backgroundColor: Colors.lightGreen,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              width: 5.0,
-            ),
-            Center(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: maxHeight * (2 / 100),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            "１着",
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(
-                            height: 70.0,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 15.0,
-                      ),
-                      Column(
-                        children: [
-                          _firstMemberNameInputPart(),
-                          _firstPointInputPart(),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: maxHeight * (2 / 100),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            "２着",
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(
-                            height: 70.0,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 15.0,
-                      ),
-                      Column(
-                        children: [
-                          _secondMemberNameInputPart(),
-                          _secondPointInputPart(),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: maxHeight * (2 / 100),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            "３着",
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(
-                            height: 70.0,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 15.0,
-                      ),
-                      Column(
-                        children: [
-                          _thirdMemberNameInputPart(),
-                          _thirdPointInputPart(),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: maxHeight * (2 / 100),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            "４着",
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(
-                            height: 70.0,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 15.0,
-                      ),
-                      Column(
-                        children: [
-                          _forceMemberNameInputPart(),
-                          _forcePointInputPart(),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: maxHeight * (2 / 100),
-                  ),
-                ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: Colors.lightGreen,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                width: 5.0,
               ),
-            ),
-            ButtonWithIcon(
-              onPressed: () => _inputPointScoreRecord(),
-              icon: Icon(
-                Icons.done_outline,
-                color: Colors.white,
+              Center(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: maxHeight * (2 / 100),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              "１着",
+                              style: TextStyle(
+                                fontSize: 28.0,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: 70.0,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          width: 15.0,
+                        ),
+                        Column(
+                          children: [
+                            _firstMemberNameInputPart(),
+                            _firstPointInputPart(),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: maxHeight * (2 / 100),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              "２着",
+                              style: TextStyle(
+                                fontSize: 28.0,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: 70.0,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          width: 15.0,
+                        ),
+                        Column(
+                          children: [
+                            _secondMemberNameInputPart(),
+                            _secondPointInputPart(),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: maxHeight * (2 / 100),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              "３着",
+                              style: TextStyle(
+                                fontSize: 28.0,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: 70.0,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          width: 15.0,
+                        ),
+                        Column(
+                          children: [
+                            _thirdMemberNameInputPart(),
+                            _thirdPointInputPart(),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: maxHeight * (2 / 100),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              "４着",
+                              style: TextStyle(
+                                fontSize: 28.0,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: 70.0,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          width: 15.0,
+                        ),
+                        Column(
+                          children: [
+                            _forceMemberNameInputPart(),
+                            _forcePointInputPart(),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: maxHeight * (2 / 100),
+                    ),
+                  ],
+                ),
               ),
-              label: "登録",
-            ),
-          ],
+              ButtonWithIcon(
+                onPressed: () => _inputPointScoreRecord(),
+                icon: Icon(
+                  Icons.done_outline,
+                  color: Colors.white,
+                ),
+                label: "登録",
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
+  //一着の名前を取得する。
   Widget _firstMemberNameInputPart() {
     return Container(
       decoration: BoxDecoration(
@@ -233,6 +234,7 @@ class _PointRecordAddState extends State<PointRecordAdd> {
     );
   }
 
+  //一着の素点を取得する。
   Widget _firstPointInputPart() {
     return Row(
       children: [
@@ -240,11 +242,11 @@ class _PointRecordAddState extends State<PointRecordAdd> {
           width: 100,
           child: TextField(
             controller: firstPointController,
-            keyboardType: TextInputType.number,
+            keyboardType: TextInputType.text,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 28.0, color: Colors.blueGrey),
             inputFormatters: [
-              LengthLimitingTextInputFormatter(3),
+              LengthLimitingTextInputFormatter(4),
             ],
           ),
         ),
@@ -266,6 +268,7 @@ class _PointRecordAddState extends State<PointRecordAdd> {
     );
   }
 
+  //二着の名前を取得する。
   Widget _secondMemberNameInputPart() {
     return Container(
       decoration: BoxDecoration(
@@ -289,6 +292,7 @@ class _PointRecordAddState extends State<PointRecordAdd> {
     );
   }
 
+  //二着の素点を取得する。
   Widget _secondPointInputPart() {
     return Row(
       children: [
@@ -296,11 +300,11 @@ class _PointRecordAddState extends State<PointRecordAdd> {
           width: 100,
           child: TextField(
             controller: secondPointController,
-            keyboardType: TextInputType.number,
+            keyboardType: TextInputType.text,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 28.0, color: Colors.blueGrey),
             inputFormatters: [
-              LengthLimitingTextInputFormatter(3),
+              LengthLimitingTextInputFormatter(4),
             ],
           ),
         ),
@@ -322,6 +326,7 @@ class _PointRecordAddState extends State<PointRecordAdd> {
     );
   }
 
+  //三着の名前を取得する。
   Widget _thirdMemberNameInputPart() {
     return Container(
       decoration: BoxDecoration(
@@ -345,6 +350,7 @@ class _PointRecordAddState extends State<PointRecordAdd> {
     );
   }
 
+  //三着の素点を取得する。
   Widget _thirdPointInputPart() {
     return Row(
       children: [
@@ -352,11 +358,11 @@ class _PointRecordAddState extends State<PointRecordAdd> {
           width: 100,
           child: TextField(
             controller: thirdPointController,
-            keyboardType: TextInputType.number,
+            keyboardType: TextInputType.text,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 28.0, color: Colors.blueGrey),
             inputFormatters: [
-              LengthLimitingTextInputFormatter(3),
+              LengthLimitingTextInputFormatter(4),
             ],
           ),
         ),
@@ -378,6 +384,7 @@ class _PointRecordAddState extends State<PointRecordAdd> {
     );
   }
 
+  //四着の名前を取得する。
   Widget _forceMemberNameInputPart() {
     return Container(
       decoration: BoxDecoration(
@@ -401,6 +408,7 @@ class _PointRecordAddState extends State<PointRecordAdd> {
     );
   }
 
+  //四着の素点を取得する。
   Widget _forcePointInputPart() {
     return Row(
       children: [
@@ -408,11 +416,11 @@ class _PointRecordAddState extends State<PointRecordAdd> {
           width: 100,
           child: TextField(
             controller: forthPointController,
-            keyboardType: TextInputType.number,
+            keyboardType: TextInputType.text,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 28.0, color: Colors.blueGrey),
             inputFormatters: [
-              LengthLimitingTextInputFormatter(3),
+              LengthLimitingTextInputFormatter(4),
             ],
           ),
         ),
@@ -434,7 +442,9 @@ class _PointRecordAddState extends State<PointRecordAdd> {
     );
   }
 
+  //素点と得点を登録する。
   _inputPointScoreRecord() async {
+    List<String> _uniqueCheck = [];
     if (_selectedFirstMember == "" ||
         firstPointController.text == "" ||
         _selectedSecondMember == "" ||
@@ -454,7 +464,7 @@ class _PointRecordAddState extends State<PointRecordAdd> {
       Toast.show("合計得点が１０００００点になりません。", context, duration: Toast.LENGTH_SHORT);
       return;
     }
-    _uniqueCheck.removeRange(0, _uniqueCheck.length);
+
     _uniqueCheck.add(_selectedFirstMember);
     _uniqueCheck.add(_selectedSecondMember);
     _uniqueCheck.add(_selectedThirdMember);
@@ -519,7 +529,6 @@ class _PointRecordAddState extends State<PointRecordAdd> {
     setState(() {});
   }
 
-  // ignore: missing_return
   int _firstScoreCalc() {
     var intSecondScoreCalc = _secondScoreCalc();
     var intThirdScoreCalc = _thirdScoreCalc();
@@ -533,30 +542,32 @@ class _PointRecordAddState extends State<PointRecordAdd> {
   int _secondScoreCalc() {
     var _secondPoint = double.parse(secondPointController.text) * 100;
     var intSecondScoreCalc =
-        ((_secondPoint - 30000 + 10000 - 100) / 1000).round();
+        ((100000 + _secondPoint - 30000 + 10000 - 100) / 1000).round() - 100;
     return intSecondScoreCalc.toInt();
   }
 
   int _thirdScoreCalc() {
     var _thirdPoint = double.parse(thirdPointController.text) * 100;
     var intThirdScoreCalc =
-        ((_thirdPoint - 30000 - 10000 - 100) / 1000).round();
+        ((100000 + _thirdPoint - 30000 - 10000 - 100) / 1000).round() - 100;
     return intThirdScoreCalc.toInt();
   }
 
   int _forthScoreCalc() {
     var _forthPoint = double.parse(forthPointController.text) * 100;
     var intForthScoreCalc =
-        ((_forthPoint - 30000 - 20000 - 100) / 1000).round();
+        ((100000 + _forthPoint - 30000 - 20000 - 100) / 1000).round() - 100;
     return intForthScoreCalc.toInt();
   }
 
+  //すべてのメンバーを取得する。
   void _getAllMember() async {
     _memberList = await database.allMembers;
     setMemberNameList();
     setState(() {});
   }
 
+  //すべてのメンバーの名前をリスト化する。
   void setMemberNameList() {
     _memberNameList.removeRange(0, _memberNameList.length);
     for (int position = 0; position < _memberList.length; position++) {
