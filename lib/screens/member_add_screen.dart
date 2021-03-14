@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:mahjong_record_sm/db/database.dart';
+import 'package:mahjong_record_sm/services/admob.dart';
 import 'package:toast/toast.dart';
 
 import '../main.dart';
@@ -21,6 +25,16 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final padding = MediaQuery.of(context).padding;
+    var maxHeight = size.height - padding.top - padding.bottom;
+
+    // アプリ描画エリアの縦サイズを取得
+    if (Platform.isAndroid) {
+      maxHeight = size.height - kToolbarHeight;
+    } else if (Platform.isIOS) {
+      maxHeight = size.height;
+    }
     return Scaffold(
       backgroundColor: Colors.lightGreen,
       appBar: AppBar(
@@ -41,7 +55,23 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
         tooltip: "新しいメンバーを追加",
         backgroundColor: Colors.orange,
       ),
-      body: _memberListWidget(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: maxHeight * (1 / 100),
+          ),
+          AdmobBanner(
+            adUnitId: AdMobService().getBannerAdUnitId(),
+            adSize: AdmobBannerSize(
+              width: MediaQuery.of(context).size.width.toInt(),
+              height: AdMobService().getHeight(context).toInt(),
+              name: 'SMART_BANNER',
+            ),
+          ),
+          SizedBox(height: maxHeight - 375.0, child: _memberListWidget()),
+        ],
+      ),
     );
   }
 
