@@ -67,7 +67,7 @@ class _MemberEveryState extends State<MemberEvery> {
             ),
             _radioButtons(),
             _conclusionRadioButtons(),
-            SizedBox(height: maxHeight - 220.0, child: _pointScoreListWidget()),
+            SizedBox(height: maxHeight - 375.0, child: _pointScoreListWidget()),
           ],
         ),
       ),
@@ -301,6 +301,10 @@ class _MemberEveryState extends State<MemberEvery> {
     final padding = MediaQuery.of(context).padding;
     var maxWidth = size.width - padding.left - padding.right;
 
+    if (_calcSummaryScore2[position] == 0) {
+      return null;
+    }
+
     return Card(
       elevation: 5.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -315,7 +319,7 @@ class _MemberEveryState extends State<MemberEvery> {
                 child: Center(
                   child: Text(
                     "${_memberList[position].strMemberName}",
-                    style: TextStyle(fontSize: 18.0),
+                    style: TextStyle(fontSize: 20.0),
                   ),
                 ),
               ),
@@ -332,7 +336,7 @@ class _MemberEveryState extends State<MemberEvery> {
                     Center(
                       child: Text(
                         "${_calcSummaryScore2[position]}",
-                        style: TextStyle(fontSize: 14.0),
+                        style: TextStyle(fontSize: 16.0),
                       ),
                     ),
                   ],
@@ -365,7 +369,10 @@ class _MemberEveryState extends State<MemberEvery> {
                       ),
                     ),
                     Center(
-                      child: Text("${_conclusion[position]}"),
+                      child: Text(
+                        "${_conclusion[position]}",
+                        style: TextStyle(fontSize: 16.0),
+                      ),
                     ),
                   ],
                 ),
@@ -399,10 +406,10 @@ class _MemberEveryState extends State<MemberEvery> {
 
   //メンバーの得点を計算しリスト化する。
   void _calcMemberScore() {
-    _calcSummaryScore2.removeRange(0, _calcSummaryScore2.length);
+    _calcSummaryScore2 = [];
     for (int i = 0; i < _memberNameList.length; i++) {
       _calcSummaryScore1 = 0;
-      _calcMemberNumberList.removeRange(0, _calcMemberNumberList.length);
+      _calcMemberNumberList = [];
       for (int j = 0; j < _scoreList.length; j++) {
         var _duration =
             DateTime.now().difference(_scoreList[j].intTimeStamp).inHours;
@@ -447,8 +454,7 @@ class _MemberEveryState extends State<MemberEvery> {
 
   //メンバーの平均順位を計算しリスト化する。
   void _calcMemberAveragePlace() {
-    _conclusionAveragePlaceList.removeRange(
-        0, _conclusionAveragePlaceList.length);
+    _conclusionAveragePlaceList = [];
 
     for (int i = 0; i < _memberNameList.length; i++) {
       _countRecord = 0;
@@ -504,14 +510,14 @@ class _MemberEveryState extends State<MemberEvery> {
     if (_conclusionAveragePlaceList[position].isNaN) {
       return Text(
         "-",
-        style: TextStyle(fontSize: 14.0),
+        style: TextStyle(fontSize: 16.0),
       );
     } else {
       _roundAveragePlace =
           (_conclusionAveragePlaceList[position] * 10).roundToDouble() / 10;
       return Text(
         _roundAveragePlace.toString(),
-        style: TextStyle(fontSize: 14.0),
+        style: TextStyle(fontSize: 16.0),
       );
     }
   }

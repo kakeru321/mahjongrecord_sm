@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mahjong_record_sm/parts/bottom_navigation_bar_original.dart';
 import 'package:mahjong_record_sm/screens/chip_record_add.dart';
 import 'package:mahjong_record_sm/screens/point_record_add.dart';
 
@@ -44,7 +43,6 @@ class _RecordAddScreenState extends State<RecordAddScreen> {
           ),
         ),
         body: TabBarView(children: _tabs.map((tab) => tab.widget).toList()),
-        bottomNavigationBar: BottomNavigationBarOriginal(),
       ),
     );
   }

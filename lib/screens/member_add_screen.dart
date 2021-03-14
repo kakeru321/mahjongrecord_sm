@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mahjong_record_sm/db/database.dart';
-import 'package:mahjong_record_sm/parts/bottom_navigation_bar_original.dart';
 import 'package:toast/toast.dart';
 
 import '../main.dart';
@@ -43,7 +42,6 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
         backgroundColor: Colors.orange,
       ),
       body: _memberListWidget(),
-      bottomNavigationBar: BottomNavigationBarOriginal(),
     );
   }
 

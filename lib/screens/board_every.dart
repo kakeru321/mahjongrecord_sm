@@ -49,7 +49,7 @@ class _BoardEveryState extends State<BoardEvery> {
               height: maxHeight * (1 / 100),
             ),
             _radioButtons(),
-            SizedBox(height: maxHeight - 335.0, child: _pointScoreListWidget()),
+            SizedBox(height: maxHeight - 375.0, child: _pointScoreListWidget()),
           ],
         ),
       ),
@@ -484,8 +484,8 @@ class _BoardEveryState extends State<BoardEvery> {
       context: context,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
-        title: Text(
-            DateFormat("yyyy/MM/dd HH:mm").format(selectedPoint.intTimeStamp)),
+        title: Text(DateFormat("yyyy/MM/dd - EEE - HH:mm:ss")
+            .format(selectedPoint.intTimeStamp)),
         content: Text("削除しても良いですか？"),
         actions: [
           FlatButton(

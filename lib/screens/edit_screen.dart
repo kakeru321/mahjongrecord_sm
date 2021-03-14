@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mahjong_record_sm/db/database.dart';
 import 'package:mahjong_record_sm/main.dart';
-import 'member_add_screen.dart';
+import 'package:mahjong_record_sm/screens/base_page.dart';
 import 'package:toast/toast.dart';
 
 class EditScreen extends StatefulWidget {
@@ -101,7 +101,7 @@ class _EditScreenState extends State<EditScreen> {
   //メンバー登録画面に戻る。
   Future<bool> _backToMemberAddScreen() {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => MemberAddScreen()));
+        context, MaterialPageRoute(builder: (context) => BasePage()));
     return Future.value(false);
   }
 

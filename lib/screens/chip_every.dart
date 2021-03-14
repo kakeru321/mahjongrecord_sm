@@ -281,6 +281,10 @@ class _ChipEveryState extends State<ChipEvery> {
     final padding = MediaQuery.of(context).padding;
     var maxWidth = size.width - padding.left - padding.right;
 
+    if (_calcSummaryScore2[position] == 0) {
+      return null;
+    }
+
     return Card(
       elevation: 5.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -365,10 +369,10 @@ class _ChipEveryState extends State<ChipEvery> {
 
   //メンバーごとにチップ収支を集計
   void _calcMemberTip() {
-    _calcSummaryScore2.removeRange(0, _calcSummaryScore2.length);
+    _calcSummaryScore2 = [];
     for (int i = 0; i < _memberNameList.length; i++) {
       _calcSummaryScore1 = 0;
-      _calcMemberNumberList.removeRange(0, _calcMemberNumberList.length);
+      _calcMemberNumberList = [];
       for (int j = 0; j < _tipList.length; j++) {
         var _duration =
             DateTime.now().difference(_tipList[j].intTimeStamp).inHours;
@@ -413,7 +417,7 @@ class _ChipEveryState extends State<ChipEvery> {
 
   //得点を計算しリスト化する。
   void _conclusionScore() {
-    _conclusion.removeRange(0, _conclusion.length);
+    _conclusion = [];
     for (int i = 0; i < _calcSummaryScore2.length; i++) {
       if (conclusionSelect == 1) {
         _conclusion.add(_calcSummaryScore2[i] * 50);
