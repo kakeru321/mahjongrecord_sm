@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:mahjong_record_sm/db/database.dart';
 import 'package:mahjong_record_sm/main.dart';
 import 'package:mahjong_record_sm/screens/base_page.dart';
+import 'package:mahjong_record_sm/services/admob.dart';
 import 'package:toast/toast.dart';
 
 class EditScreen extends StatefulWidget {
@@ -22,6 +26,16 @@ class _EditScreenState extends State<EditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final padding = MediaQuery.of(context).padding;
+    var maxHeight = size.height - padding.top - padding.bottom;
+
+    // アプリ描画エリアの縦サイズを取得
+    if (Platform.isAndroid) {
+      maxHeight = size.height - kToolbarHeight;
+    } else if (Platform.isIOS) {
+      maxHeight = size.height;
+    }
     return WillPopScope(
       onWillPop: () => _backToMemberAddScreen(),
       child: GestureDetector(
@@ -54,6 +68,17 @@ class _EditScreenState extends State<EditScreen> {
             child: Column(
               children: [
                 SizedBox(
+                  height: maxHeight * (1 / 100),
+                ),
+                AdmobBanner(
+                  adUnitId: AdMobService().getBannerAdUnitId(),
+                  adSize: AdmobBannerSize(
+                    width: MediaQuery.of(context).size.width.toInt(),
+                    height: AdMobService().getHeight(context).toInt(),
+                    name: 'SMART_BANNER',
+                  ),
+                ),
+                SizedBox(
                   height: 30.0,
                 ),
                 Center(
@@ -67,6 +92,14 @@ class _EditScreenState extends State<EditScreen> {
                 ),
                 _memberInputPart(),
               ],
+            ),
+          ),
+          bottomNavigationBar: AdmobBanner(
+            adUnitId: AdMobService().getBannerAdUnitId(),
+            adSize: AdmobBannerSize(
+              width: MediaQuery.of(context).size.width.toInt(),
+              height: AdMobService().getHeight(context).toInt(),
+              name: 'SMART_BANNER',
             ),
           ),
         ),
