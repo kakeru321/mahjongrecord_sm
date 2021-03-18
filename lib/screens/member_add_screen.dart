@@ -61,14 +61,6 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
           SizedBox(
             height: maxHeight * (1 / 100),
           ),
-          AdmobBanner(
-            adUnitId: AdMobService().getBannerAdUnitId(),
-            adSize: AdmobBannerSize(
-              width: MediaQuery.of(context).size.width.toInt(),
-              height: AdMobService().getHeight(context).toInt(),
-              name: 'SMART_BANNER',
-            ),
-          ),
           SizedBox(height: maxHeight - 375.0, child: _memberListWidget()),
         ],
       ),
