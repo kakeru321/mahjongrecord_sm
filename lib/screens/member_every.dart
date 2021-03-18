@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:mahjong_record_sm/db/database.dart';
 import 'package:mahjong_record_sm/main.dart';
 import 'package:toast/toast.dart';
@@ -302,7 +303,7 @@ class _MemberEveryState extends State<MemberEvery> {
     var maxWidth = size.width - padding.left - padding.right;
 
     if (_calcSummaryScore2[position] == 0) {
-      return null;
+      return Container();
     }
 
     return Card(

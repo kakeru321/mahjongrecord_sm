@@ -282,7 +282,7 @@ class _ChipEveryState extends State<ChipEvery> {
     var maxWidth = size.width - padding.left - padding.right;
 
     if (_calcSummaryScore2[position] == 0) {
-      return null;
+      return Container();
     }
 
     return Card(
