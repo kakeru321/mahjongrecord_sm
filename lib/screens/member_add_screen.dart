@@ -1,9 +1,7 @@
 import 'dart:io';
 
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:mahjong_record_sm/db/database.dart';
-import 'package:mahjong_record_sm/services/admob.dart';
 import 'package:toast/toast.dart';
 
 import '../main.dart';
@@ -61,7 +59,7 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
           SizedBox(
             height: maxHeight * (1 / 100),
           ),
-          SizedBox(height: maxHeight - 375.0, child: _memberListWidget()),
+          SizedBox(height: maxHeight - 250.0, child: _memberListWidget()),
         ],
       ),
     );

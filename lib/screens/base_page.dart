@@ -1,4 +1,6 @@
+import 'dart:math' as math;
 import 'package:admob_flutter/admob_flutter.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:mahjong_record_sm/screens/member_add_screen.dart';
 import 'package:mahjong_record_sm/screens/record_add_screen.dart';
@@ -24,8 +26,37 @@ class _BasePageState extends State<BasePage> {
     });
   }
 
+  MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+    keywords: <String>['flutterio', 'beautiful apps'],
+    contentUrl: 'https://flutter.io',
+    childDirected: false,
+    testDevices: <String>[], // Android emulators are considered test devices
+  );
+
   @override
   Widget build(BuildContext context) {
+    var interstitialRandom = math.Random().nextInt(5);
+    var correct = 0;
+    if (interstitialRandom == correct) {
+      InterstitialAd myInterstitial = InterstitialAd(
+        // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+        // https://developers.google.com/admob/android/test-ads
+        // https://developers.google.com/admob/ios/test-ads
+        adUnitId: InterstitialAd.testAdUnitId,
+        targetingInfo: targetingInfo,
+        listener: (MobileAdEvent event) {
+          print("InterstitialAd event is $event");
+        },
+      );
+
+      myInterstitial
+        ..load()
+        ..show(
+          anchorType: AnchorType.bottom,
+          anchorOffset: 0.0,
+          horizontalCenterOffset: 0.0,
+        );
+    }
     return Scaffold(
       body: _pageList[_selectedIndex],
       bottomNavigationBar: Column(
