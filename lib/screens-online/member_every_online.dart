@@ -1,24 +1,28 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/rendering.dart';
-import 'package:mahjong_record_sm/db/database.dart';
-import 'package:mahjong_record_sm/main.dart';
+import 'package:flutter_session/flutter_session.dart';
+import 'package:mahjong_record_sm/parts/hex_color.dart';
 import 'package:toast/toast.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:mahjong_record_sm/formats/member-online.dart';
+import 'package:mahjong_record_sm/formats/point-online.dart';
+import 'package:mahjong_record_sm/formats/score-online.dart';
 
-class MemberEvery extends StatefulWidget {
+class MemberEveryOnline extends StatefulWidget {
   @override
-  _MemberEveryState createState() => _MemberEveryState();
+  _MemberEveryOnlineState createState() => _MemberEveryOnlineState();
 }
 
-class _MemberEveryState extends State<MemberEvery> {
+class _MemberEveryOnlineState extends State<MemberEveryOnline> {
   List<int> _calcMemberNumberList = [];
-  List<Member> _memberList = [];
+  List<MemberOnline> _memberList = [];
   List<String> _memberNameList = [];
 
   int _calcSummaryScore1 = 0;
   List<int> _calcSummaryScore2 = [];
-  List<Point> _pointList = [];
+  List<PointOnline> _pointList = [];
 
   int _calcMemberAverage = 0;
   int _countRecord = 0;
@@ -28,7 +32,7 @@ class _MemberEveryState extends State<MemberEvery> {
   int periodSelect = 1;
   int conclusionSelect = 2;
 
-  List<Score> _scoreList = [];
+  List<ScoreOnline> _scoreList = [];
   List<int> _conclusion = [];
 
   ScrollController _viewController = ScrollController();
@@ -57,7 +61,7 @@ class _MemberEveryState extends State<MemberEvery> {
       maxHeight = size.height;
     }
     return Scaffold(
-      backgroundColor: Colors.lightGreen,
+      backgroundColor: HexColor('f9f7f7'),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,7 +71,14 @@ class _MemberEveryState extends State<MemberEvery> {
             ),
             _radioButtons(),
             _conclusionRadioButtons(),
-            SizedBox(height: maxHeight - 375.0, child: _pointScoreListWidget()),
+            Divider(
+              height: 5.0,
+              color: HexColor('112d4e'),
+              indent: 3.0,
+              endIndent: 3.0,
+              thickness: 1,
+            ),
+            SizedBox(height: maxHeight - 220.0, child: _pointScoreListWidget()),
           ],
         ),
       ),
@@ -78,8 +89,7 @@ class _MemberEveryState extends State<MemberEvery> {
   Widget _radioButtons() {
     return Card(
       elevation: 5.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      color: Colors.limeAccent,
+      color: HexColor('dbe2ef'),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -180,8 +190,7 @@ class _MemberEveryState extends State<MemberEvery> {
   Widget _conclusionRadioButtons() {
     return Card(
       elevation: 5.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      color: Colors.limeAccent,
+      color: HexColor('dbe2ef'),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -278,13 +287,61 @@ class _MemberEveryState extends State<MemberEvery> {
 
   //すべての素点を取得する。
   void _getAllPoint() async {
-    _pointList = await database.allPoints;
+    dynamic session = await FlutterSession().get('mySession');
+    _pointList = [];
+
+    QuerySnapshot pointRecordSnapshot = await FirebaseFirestore.instance
+        .collection("teamList")
+        .doc(session['teamId'])
+        .collection("pointRecord")
+        .get();
+
+    for (var i = 0; i < pointRecordSnapshot.docs.length; i++) {
+      _pointList.add(
+        PointOnline(
+          pointRecordSnapshot.docs[i]['intFirstPoint'],
+          pointRecordSnapshot.docs[i]['intSecondPoint'],
+          pointRecordSnapshot.docs[i]['intThirdPoint'],
+          pointRecordSnapshot.docs[i]['intForthPoint'],
+          pointRecordSnapshot.docs[i]['intTimeStamp'].toDate(),
+          pointRecordSnapshot.docs[i]['strFirstMemberName'],
+          pointRecordSnapshot.docs[i]['strSecondMemberName'],
+          pointRecordSnapshot.docs[i]['strThirdMemberName'],
+          pointRecordSnapshot.docs[i]['strForthMemberName'],
+          pointRecordSnapshot.docs[i]['teamId'],
+        ),
+      );
+    }
     setState(() {});
   }
 
   //すべての得点を取得する。
   void _getAllScore() async {
-    _scoreList = await database.allScores;
+    dynamic session = await FlutterSession().get('mySession');
+    _scoreList = [];
+
+    QuerySnapshot scoreRecordSnapshot = await FirebaseFirestore.instance
+        .collection("teamList")
+        .doc(session['teamId'])
+        .collection("scoreRecord")
+        .get();
+
+    for (var i = 0; i < scoreRecordSnapshot.docs.length; i++) {
+      _scoreList.add(
+        ScoreOnline(
+          scoreRecordSnapshot.docs[i]['intFirstScore'],
+          scoreRecordSnapshot.docs[i]['intSecondScore'],
+          scoreRecordSnapshot.docs[i]['intThirdScore'],
+          scoreRecordSnapshot.docs[i]['intForthScore'],
+          scoreRecordSnapshot.docs[i]['intTimeStamp'].toDate(),
+          scoreRecordSnapshot.docs[i]['strFirstMemberName'],
+          scoreRecordSnapshot.docs[i]['strSecondMemberName'],
+          scoreRecordSnapshot.docs[i]['strThirdMemberName'],
+          scoreRecordSnapshot.docs[i]['strForthMemberName'],
+          scoreRecordSnapshot.docs[i]['teamId'],
+        ),
+      );
+    }
   }
 
   //すべての得点と素点をリスト化する。
@@ -307,8 +364,10 @@ class _MemberEveryState extends State<MemberEvery> {
 
     return Card(
       elevation: 5.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      color: Colors.lightGreenAccent,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(color: HexColor('112d4e'), width: 2),
+      ),
+      color: HexColor('dbe2ef'),
       child: Column(
         children: [
           Row(
@@ -318,7 +377,7 @@ class _MemberEveryState extends State<MemberEvery> {
                 width: maxWidth * (30 / 100),
                 child: Center(
                   child: Text(
-                    "${_memberList[position].strMemberName}",
+                    "${_memberList[position].memberName}",
                     style: TextStyle(fontSize: 20.0),
                   ),
                 ),
@@ -386,18 +445,34 @@ class _MemberEveryState extends State<MemberEvery> {
 
   //すべてのメンバーを取得する。
   void _getAllMember() async {
-    _memberList = await database.allMembers;
+    dynamic session = await FlutterSession().get('mySession');
+    _memberList = [];
+
+    QuerySnapshot memberRecordSnapshot = await FirebaseFirestore.instance
+        .collection("teamList")
+        .doc(session['teamId'])
+        .collection("memberList")
+        .get();
+
+    for (var i = 0; i < memberRecordSnapshot.docs.length; i++) {
+      _memberList.add(
+        MemberOnline(
+          memberRecordSnapshot.docs[i]['memberName'],
+          memberRecordSnapshot.docs[i]['teamId'],
+        ),
+      );
+    }
     setMemberNameList();
     setState(() {});
   }
 
   //すべてのメンバーをリスト化する。
   void setMemberNameList() {
-    _memberNameList.removeRange(0, _memberNameList.length);
+    _memberNameList = [];
 
     for (int position = 0; position < _memberList.length; position++) {
       _memberNameList.add(
-        _memberList[position].strMemberName,
+        _memberList[position].memberName,
       );
     }
     _calcMemberScore();
@@ -524,7 +599,7 @@ class _MemberEveryState extends State<MemberEvery> {
 
   //レートを計算する市リスト化する。
   void _conclusionScore() {
-    _conclusion.removeRange(0, _conclusion.length);
+    _conclusion = [];
     for (int i = 0; i < _calcSummaryScore2.length; i++) {
       if (conclusionSelect == 1) {
         _conclusion.add(_calcSummaryScore2[i] * 30);

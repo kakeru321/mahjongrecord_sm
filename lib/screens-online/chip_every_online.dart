@@ -1,47 +1,38 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:mahjong_record_sm/db/database.dart';
-import 'package:mahjong_record_sm/main.dart';
-import 'package:toast/toast.dart';
-import 'package:in_app_review/in_app_review.dart';
 
-class MemberEvery extends StatefulWidget {
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_session/flutter_session.dart';
+import 'package:mahjong_record_sm/formats/member-online.dart';
+import 'package:mahjong_record_sm/formats/tip-online.dart';
+import 'package:mahjong_record_sm/parts/hex_color.dart';
+import 'package:toast/toast.dart';
+import 'package:flutter/rendering.dart';
+
+class ChipEveryOnline extends StatefulWidget {
   @override
-  _MemberEveryState createState() => _MemberEveryState();
+  _ChipEveryOnlineState createState() => _ChipEveryOnlineState();
 }
 
-class _MemberEveryState extends State<MemberEvery> {
+class _ChipEveryOnlineState extends State<ChipEveryOnline> {
   List<int> _calcMemberNumberList = [];
-  List<Member> _memberList = [];
-  List<String> _memberNameList = [];
-
   int _calcSummaryScore1 = 0;
+  List<MemberOnline> _memberList = [];
+  List<String> _memberNameList = [];
   List<int> _calcSummaryScore2 = [];
-  List<Point> _pointList = [];
-
-  int _calcMemberAverage = 0;
-  int _countRecord = 0;
-  double _conclusionAveragePlace = 0;
-  List<double> _conclusionAveragePlaceList = [];
 
   int periodSelect = 1;
   int conclusionSelect = 2;
 
-  List<Score> _scoreList = [];
+  List<TipOnline> _tipList = [];
   List<int> _conclusion = [];
 
   ScrollController _viewController = ScrollController();
 
-  final InAppReview inAppReview = InAppReview.instance;
-
   @override
   void initState() {
     super.initState();
-    _getAllPoint();
-    _getAllScore();
-    _getAllMember();
-    _getReview();
+    _getAllTip();
   }
 
   @override
@@ -57,7 +48,7 @@ class _MemberEveryState extends State<MemberEvery> {
       maxHeight = size.height;
     }
     return Scaffold(
-      backgroundColor: Colors.lightGreen,
+      backgroundColor: HexColor('f9f7f7'),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,7 +58,14 @@ class _MemberEveryState extends State<MemberEvery> {
             ),
             _radioButtons(),
             _conclusionRadioButtons(),
-            SizedBox(height: maxHeight - 375.0, child: _pointScoreListWidget()),
+            Divider(
+              height: 5.0,
+              color: HexColor('112d4e'),
+              indent: 3.0,
+              endIndent: 3.0,
+              thickness: 1,
+            ),
+            SizedBox(height: maxHeight - 220.0, child: _tipListWidget()),
           ],
         ),
       ),
@@ -78,8 +76,7 @@ class _MemberEveryState extends State<MemberEvery> {
   Widget _radioButtons() {
     return Card(
       elevation: 5.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      color: Colors.limeAccent,
+      color: HexColor('dbe2ef'),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -180,8 +177,7 @@ class _MemberEveryState extends State<MemberEvery> {
   Widget _conclusionRadioButtons() {
     return Card(
       elevation: 5.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      color: Colors.limeAccent,
+      color: HexColor('dbe2ef'),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -209,7 +205,7 @@ class _MemberEveryState extends State<MemberEvery> {
           SizedBox(
             width: 50,
             child: Text(
-              "30G",
+              "50G",
               style: TextStyle(
                 fontSize: 16.0,
                 color: Colors.black54,
@@ -227,7 +223,7 @@ class _MemberEveryState extends State<MemberEvery> {
           SizedBox(
             width: 50,
             child: Text(
-              "50G",
+              "100G",
               style: TextStyle(
                 fontSize: 16.0,
                 color: Colors.black54,
@@ -245,7 +241,7 @@ class _MemberEveryState extends State<MemberEvery> {
           SizedBox(
             // width: 120,
             child: Text(
-              "100G",
+              "500G",
               style: TextStyle(
                 fontSize: 16.0,
                 color: Colors.black54,
@@ -263,40 +259,55 @@ class _MemberEveryState extends State<MemberEvery> {
   //ラジオボタン（期間）の選択値
   _onRadioSelected(value) {
     periodSelect = value;
-    _getAllMember();
-    _getAllPoint();
-    _getAllScore();
+    _getAllTip();
   }
 
   //ラジオボタン（レート）の選択値
   _onConclusionRadioSelected(value) {
     conclusionSelect = value;
+    _getAllTip();
+  }
+
+  //すべてのチップ枚数を取得する。
+  void _getAllTip() async {
+    dynamic session = await FlutterSession().get('mySession');
+    _tipList = [];
+
+    QuerySnapshot tipRecordSnapshot = await FirebaseFirestore.instance
+        .collection("teamList")
+        .doc(session['teamId'])
+        .collection("chipRecord")
+        .get();
+
+    for (var i = 0; i < tipRecordSnapshot.docs.length; i++) {
+      _tipList.add(
+        TipOnline(
+          tipRecordSnapshot.docs[i].data()['strPlayer1Name'],
+          tipRecordSnapshot.docs[i].data()['strPlayer2Name'],
+          tipRecordSnapshot.docs[i].data()['strPlayer3Name'],
+          tipRecordSnapshot.docs[i].data()['strPlayer4Name'],
+          tipRecordSnapshot.docs[i].data()['intTimeStamp'].toDate(),
+          tipRecordSnapshot.docs[i].data()['intPlayer1Tip'],
+          tipRecordSnapshot.docs[i].data()['intPlayer2Tip'],
+          tipRecordSnapshot.docs[i].data()['intPlayer3Tip'],
+          tipRecordSnapshot.docs[i].data()['intPlayer4Tip'],
+          tipRecordSnapshot.docs[i].data()['teamId'],
+        ),
+      );
+    }
     _getAllMember();
-    _getAllPoint();
-    _getAllScore();
   }
 
-  //すべての素点を取得する。
-  void _getAllPoint() async {
-    _pointList = await database.allPoints;
-    setState(() {});
-  }
-
-  //すべての得点を取得する。
-  void _getAllScore() async {
-    _scoreList = await database.allScores;
-  }
-
-  //すべての得点と素点をリスト化する。
-  Widget _pointScoreListWidget() {
+  //すべてのチップをリストにする。
+  Widget _tipListWidget() {
     return ListView.builder(
         controller: _viewController,
         itemCount: _memberList.length,
-        itemBuilder: (context, int position) => _pointItem(position));
+        itemBuilder: (context, int position) => _tipItem(position));
   }
 
-  //リストの中身を定義する。
-  Widget _pointItem(int position) {
+  //カードの中身を定義
+  Widget _tipItem(int position) {
     final size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
     var maxWidth = size.width - padding.left - padding.right;
@@ -307,8 +318,10 @@ class _MemberEveryState extends State<MemberEvery> {
 
     return Card(
       elevation: 5.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      color: Colors.lightGreenAccent,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(color: HexColor('112d4e'), width: 2),
+      ),
+      color: HexColor('dbe2ef'),
       child: Column(
         children: [
           Row(
@@ -318,7 +331,7 @@ class _MemberEveryState extends State<MemberEvery> {
                 width: maxWidth * (30 / 100),
                 child: Center(
                   child: Text(
-                    "${_memberList[position].strMemberName}",
+                    "${_memberList[position].memberName}",
                     style: TextStyle(fontSize: 20.0),
                   ),
                 ),
@@ -329,7 +342,7 @@ class _MemberEveryState extends State<MemberEvery> {
                   children: [
                     Center(
                       child: Text(
-                        "合計（点）",
+                        "合計（枚）",
                         style: TextStyle(fontSize: 8.0),
                       ),
                     ),
@@ -338,22 +351,6 @@ class _MemberEveryState extends State<MemberEvery> {
                         "${_calcSummaryScore2[position]}",
                         style: TextStyle(fontSize: 16.0),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: maxWidth * (20 / 100),
-                child: Column(
-                  children: [
-                    Center(
-                      child: Text(
-                        "平均順位",
-                        style: TextStyle(fontSize: 8.0),
-                      ),
-                    ),
-                    Center(
-                      child: _nullCheckAveragePlaceList(position),
                     ),
                   ],
                 ),
@@ -386,33 +383,47 @@ class _MemberEveryState extends State<MemberEvery> {
 
   //すべてのメンバーを取得する。
   void _getAllMember() async {
-    _memberList = await database.allMembers;
+    dynamic session = await FlutterSession().get('mySession');
+    _memberList = [];
+
+    QuerySnapshot memberRecordSnapshot = await FirebaseFirestore.instance
+        .collection("teamList")
+        .doc(session['teamId'])
+        .collection("memberList")
+        .get();
+
+    for (var i = 0; i < memberRecordSnapshot.docs.length; i++) {
+      _memberList.add(
+        MemberOnline(
+          memberRecordSnapshot.docs[i]['memberName'],
+          memberRecordSnapshot.docs[i]['teamId'],
+        ),
+      );
+    }
     setMemberNameList();
-    setState(() {});
   }
 
   //すべてのメンバーをリスト化する。
   void setMemberNameList() {
-    _memberNameList.removeRange(0, _memberNameList.length);
+    _memberNameList = [];
 
     for (int position = 0; position < _memberList.length; position++) {
       _memberNameList.add(
-        _memberList[position].strMemberName,
+        _memberList[position].memberName,
       );
     }
-    _calcMemberScore();
-    _calcMemberAveragePlace();
+    _calcMemberTip();
   }
 
-  //メンバーの得点を計算しリスト化する。
-  void _calcMemberScore() {
+  //メンバーごとにチップ収支を集計
+  void _calcMemberTip() {
     _calcSummaryScore2 = [];
     for (int i = 0; i < _memberNameList.length; i++) {
       _calcSummaryScore1 = 0;
       _calcMemberNumberList = [];
-      for (int j = 0; j < _scoreList.length; j++) {
+      for (int j = 0; j < _tipList.length; j++) {
         var _duration =
-            DateTime.now().difference(_scoreList[j].intTimeStamp).inHours;
+            DateTime.now().difference(_tipList[j].intTimeStamp).inHours;
 
         if (periodSelect == 2) {
           if (_duration > 720) {
@@ -430,17 +441,17 @@ class _MemberEveryState extends State<MemberEvery> {
           }
         }
 
-        if (_memberNameList[i] == _scoreList[j].strFirstMemberName) {
-          _calcMemberNumberList.add(_scoreList[j].intFirstScore);
+        if (_memberNameList[i] == _tipList[j].strPlayer1Name) {
+          _calcMemberNumberList.add(_tipList[j].intPlayer1Tip);
         }
-        if (_memberNameList[i] == _scoreList[j].strSecondMemberName) {
-          _calcMemberNumberList.add(_scoreList[j].intSecondScore);
+        if (_memberNameList[i] == _tipList[j].strPlayer2Name) {
+          _calcMemberNumberList.add(_tipList[j].intPlayer2Tip);
         }
-        if (_memberNameList[i] == _scoreList[j].strThirdMemberName) {
-          _calcMemberNumberList.add(_scoreList[j].intThirdScore);
+        if (_memberNameList[i] == _tipList[j].strPlayer3Name) {
+          _calcMemberNumberList.add(_tipList[j].intPlayer3Tip);
         }
-        if (_memberNameList[i] == _scoreList[j].strForthMemberName) {
-          _calcMemberNumberList.add(_scoreList[j].intForthScore);
+        if (_memberNameList[i] == _tipList[j].strPlayer4Name) {
+          _calcMemberNumberList.add(_tipList[j].intPlayer4Tip);
         }
       }
       for (int k = 0; k < _calcMemberNumberList.length; k++) {
@@ -448,94 +459,23 @@ class _MemberEveryState extends State<MemberEvery> {
       }
       _calcSummaryScore2.add(_calcSummaryScore1);
     }
-    setState(() {});
     _conclusionScore();
   }
 
-  //メンバーの平均順位を計算しリスト化する。
-  void _calcMemberAveragePlace() {
-    _conclusionAveragePlaceList = [];
-
-    for (int i = 0; i < _memberNameList.length; i++) {
-      _countRecord = 0;
-      _calcMemberAverage = 0;
-      _conclusionAveragePlace = 0;
-      for (int j = 0; j < _scoreList.length; j++) {
-        var _duration =
-            DateTime.now().difference(_scoreList[j].intTimeStamp).inHours;
-
-        if (periodSelect == 2) {
-          if (_duration > 720) {
-            continue;
-          }
-        }
-        if (periodSelect == 3) {
-          if (_duration > 24) {
-            continue;
-          }
-        }
-        if (periodSelect == 4) {
-          if (_duration > 12) {
-            continue;
-          }
-        }
-
-        if (_memberNameList[i] == _scoreList[j].strFirstMemberName) {
-          _calcMemberAverage = _calcMemberAverage + 1;
-          _countRecord = _countRecord + 1;
-        }
-        if (_memberNameList[i] == _scoreList[j].strSecondMemberName) {
-          _calcMemberAverage = _calcMemberAverage + 2;
-          _countRecord = _countRecord + 1;
-        }
-        if (_memberNameList[i] == _scoreList[j].strThirdMemberName) {
-          _calcMemberAverage = _calcMemberAverage + 3;
-          _countRecord = _countRecord + 1;
-        }
-        if (_memberNameList[i] == _scoreList[j].strForthMemberName) {
-          _calcMemberAverage = _calcMemberAverage + 4;
-          _countRecord = _countRecord + 1;
-        }
-      }
-
-      _conclusionAveragePlace = _calcMemberAverage / _countRecord;
-      _conclusionAveragePlaceList.add(_conclusionAveragePlace);
-    }
-    setState(() {});
-  }
-
-  //メンバー名が空欄でないことの確認をする。
-  _nullCheckAveragePlaceList(position) {
-    double _roundAveragePlace = 0;
-    if (_conclusionAveragePlaceList[position].isNaN) {
-      return Text(
-        "-",
-        style: TextStyle(fontSize: 16.0),
-      );
-    } else {
-      _roundAveragePlace =
-          (_conclusionAveragePlaceList[position] * 10).roundToDouble() / 10;
-      return Text(
-        _roundAveragePlace.toString(),
-        style: TextStyle(fontSize: 16.0),
-      );
-    }
-  }
-
-  //レートを計算する市リスト化する。
+  //得点を計算しリスト化する。
   void _conclusionScore() {
-    _conclusion.removeRange(0, _conclusion.length);
+    _conclusion = [];
     for (int i = 0; i < _calcSummaryScore2.length; i++) {
       if (conclusionSelect == 1) {
-        _conclusion.add(_calcSummaryScore2[i] * 30);
-        continue;
-      }
-      if (conclusionSelect == 2) {
         _conclusion.add(_calcSummaryScore2[i] * 50);
         continue;
       }
-      if (conclusionSelect == 3) {
+      if (conclusionSelect == 2) {
         _conclusion.add(_calcSummaryScore2[i] * 100);
+        continue;
+      }
+      if (conclusionSelect == 3) {
+        _conclusion.add(_calcSummaryScore2[i] * 500);
         continue;
       }
 
@@ -543,11 +483,5 @@ class _MemberEveryState extends State<MemberEvery> {
           duration: Toast.LENGTH_SHORT);
     }
     setState(() {});
-  }
-
-  void _getReview() async {
-    if (await inAppReview.isAvailable()) {
-      inAppReview.requestReview();
-    }
   }
 }

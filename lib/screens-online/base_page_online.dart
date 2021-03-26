@@ -3,22 +3,23 @@ import 'dart:math' as math;
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
-import 'package:mahjong_record_sm/screens/member_add_screen.dart';
-import 'package:mahjong_record_sm/screens/record_add_screen.dart';
-import 'package:mahjong_record_sm/screens/record_inquiry_screen.dart';
+import 'package:mahjong_record_sm/parts/hex_color.dart';
+import 'package:mahjong_record_sm/screens-online/member_add_screen_online.dart';
+import 'package:mahjong_record_sm/screens-online/record_add_screen_online.dart';
+import 'package:mahjong_record_sm/screens-online/record_inquiry_screen_online.dart';
 import 'package:mahjong_record_sm/services/admob.dart';
 
-class BasePage extends StatefulWidget {
+class BasePageOnline extends StatefulWidget {
   @override
-  _BasePageState createState() => _BasePageState();
+  _BasePageOnlineState createState() => _BasePageOnlineState();
 }
 
-class _BasePageState extends State<BasePage> {
+class _BasePageOnlineState extends State<BasePageOnline> {
   int _selectedIndex = 0;
   List _pageList = [
-    RecordInquiryScreen(),
-    RecordAddScreen(),
-    MemberAddScreen()
+    RecordInquiryScreenOnline(),
+    RecordAddScreenOnline(),
+    MemberAddScreenOnline()
   ];
 
   void _onItemTapped(int index) {
@@ -95,28 +96,28 @@ class _BasePageState extends State<BasePage> {
               ),
             ),
             BottomNavigationBar(
-              backgroundColor: Colors.orange,
-              selectedItemColor: Colors.limeAccent,
-              unselectedItemColor: Colors.black54,
+              backgroundColor: HexColor('3f72af'),
+              selectedItemColor: HexColor('f9f7f7'),
+              unselectedItemColor: HexColor('f9f7f7'),
               items: [
                 BottomNavigationBarItem(
                   icon: Icon(
                     Icons.article,
-                    color: Colors.white,
+                    color: HexColor('f9f7f7'),
                   ),
                   label: '戦績照会',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
                     Icons.photo_filter,
-                    color: Colors.white,
+                    color: HexColor('f9f7f7'),
                   ),
                   label: '戦績入力',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
                     Icons.person_add_sharp,
-                    color: Colors.white,
+                    color: HexColor('f9f7f7'),
                   ),
                   label: 'メンバー管理',
                 )

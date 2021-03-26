@@ -1,20 +1,19 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:mahjong_record_sm/db/database.dart';
-import 'package:mahjong_record_sm/screens-online/home_screen_online.dart';
-import 'package:toast/toast.dart';
+import 'package:mahjong_record_sm/formats/member-online.dart';
+import 'package:mahjong_record_sm/parts/hex_color.dart';
+import 'edit_screen_online.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_session/flutter_session.dart';
 
-import '../main.dart';
-import 'edit_screen.dart';
-
-class MemberAddScreen extends StatefulWidget {
+class MemberAddScreenOnline extends StatefulWidget {
   @override
-  _MemberAddScreenState createState() => _MemberAddScreenState();
+  _MemberAddScreenOnlineState createState() => _MemberAddScreenOnlineState();
 }
 
-class _MemberAddScreenState extends State<MemberAddScreen> {
-  List<Member> _memberList = [];
+class _MemberAddScreenOnlineState extends State<MemberAddScreenOnline> {
+  List<MemberOnline> _memberList = [];
 
   @override
   void initState() {
@@ -35,34 +34,25 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
       maxHeight = size.height;
     }
     return Scaffold(
-      backgroundColor: Colors.lightGreen,
+      backgroundColor: HexColor('f9f7f7'),
       appBar: AppBar(
         title: Text(
           "メ ン バー 管 理",
           style: TextStyle(
             fontSize: 28.0,
             fontWeight: FontWeight.bold,
+            color: HexColor('f9f7f7'),
           ),
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.orange,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.done,
-              color: Colors.orange,
-            ),
-            tooltip: "test",
-            onPressed: () => _testPage(),
-          )
-        ],
+        backgroundColor: HexColor('3f72af'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _addNewMember(),
         child: Icon(Icons.add_outlined),
         tooltip: "新しいメンバーを追加",
-        backgroundColor: Colors.orange,
+        backgroundColor: HexColor('112d4e'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -81,14 +71,29 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => EditScreen(),
+        builder: (context) => EditScreenOnline(),
       ),
     );
   }
 
   //すべてのメンバーを取得する。
   void _getAllMember() async {
-    _memberList = await database.allMembers;
+    dynamic session = await FlutterSession().get('mySession');
+    _memberList = [];
+    QuerySnapshot memberRecordSnapshot = await FirebaseFirestore.instance
+        .collection("teamList")
+        .doc(session['teamId'])
+        .collection("memberList")
+        .get();
+
+    for (var i = 0; i < memberRecordSnapshot.docs.length; i++) {
+      _memberList.add(
+        MemberOnline(
+          memberRecordSnapshot.docs[i]['memberName'],
+          memberRecordSnapshot.docs[i]['teamId'],
+        ),
+      );
+    }
     setState(() {});
   }
 
@@ -103,18 +108,20 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
   Widget _memberItem(int position) {
     return Card(
       elevation: 5.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      color: Colors.lightGreenAccent,
+      shape: RoundedRectangleBorder(
+          side: BorderSide(color: HexColor('112d4e'), width: 2)),
+      color: HexColor('dbe2ef'),
       child: ListTile(
         title: Text(
-          "${_memberList[position].strMemberName}",
-          style: TextStyle(color: Colors.blueGrey),
+          "${_memberList[position].memberName}",
+          style: TextStyle(fontSize: 18, color: Colors.blueGrey),
         ),
-        onLongPress: () => _deleteMember(_memberList[position]),
+//        onLongPress: () => _deleteMember(_memberList[position]), TODO memberDelete
       ),
     );
   }
 
+/*
   //メンバーを削除する。
   _deleteMember(Member selectedMember) async {
     showDialog(
@@ -142,15 +149,5 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
         ],
       ),
     );
-  }
-
-  //テストページへ遷移する。
-  _testPage() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => HomeScreenOnline(),
-      ),
-    );
-  }
+  }*/
 }

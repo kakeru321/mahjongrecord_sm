@@ -2,12 +2,12 @@ import 'dart:ui' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:mahjong_record_sm/parts/hex_color.dart';
 
-class ButtonWithIcon extends StatelessWidget {
+class ButtonWithIconOnline extends StatelessWidget {
   final VoidCallback onPressed;
   final Icon icon;
   final String label;
 
-  ButtonWithIcon({
+  ButtonWithIconOnline({
     this.onPressed,
     this.icon,
     this.label,
@@ -31,7 +31,7 @@ class ButtonWithIcon extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          color: Colors.orange,
+          color: HexColor('3f72af'),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(prefix0.Radius.circular(8.0)),
           ),

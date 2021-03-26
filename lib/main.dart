@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: "シンプルすぎる計算脳トレ",
+        title: "シンプルきろく",
         theme: ThemeData(
           fontFamily: 'GenShinGothic',
         ),
