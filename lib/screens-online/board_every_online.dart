@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:mahjong_record_sm/formats/point-online.dart';
 import 'package:mahjong_record_sm/formats/score-online.dart';
 import 'package:mahjong_record_sm/parts/hex_color.dart';
+import 'package:toast/toast.dart';
 
 class BoardEveryOnline extends StatefulWidget {
   @override
@@ -300,8 +301,9 @@ class _BoardEveryOnlineState extends State<BoardEveryOnline> {
                   style: TextStyle(fontSize: 24.0, color: HexColor('f9f7f7')),
                 ),
               ),
-//TODO deletePointScore              onLongPress: () =>
-//                  _deletePointScore(_pointList[position], _scoreList[position]),
+              onLongPress: () => _deletePointScore(
+                  _pointList[position].intTimeStamp,
+                  _scoreList[position].intTimeStamp),
             ),
           ),
         ),
@@ -536,19 +538,19 @@ class _BoardEveryOnlineState extends State<BoardEveryOnline> {
   }
 
   //選択したデータを削除する。
-/*  _deletePointScore(Point selectedPoint, Score selectedScore) async {
+  _deletePointScore(DateTime selectedPoint, DateTime selectedScore) async {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
-        title: Text(DateFormat("yyyy/MM/dd - EEE - HH:mm:ss")
-            .format(selectedPoint.intTimeStamp)),
+        title: Text(
+            DateFormat("yyyy/MM/dd - EEE - HH:mm:ss").format(selectedPoint)),
         content: Text("削除しても良いですか？"),
         actions: [
           FlatButton(
             onPressed: () async {
-              await database.deletePoint(selectedPoint);
-              await database.deleteScore(selectedScore);
+              await _deletePointFirestore(selectedPoint);
+              await _deleteScoreFirestore(selectedScore);
               Toast.show("削除完了しました", context, duration: Toast.LENGTH_SHORT);
               _getAllPoint();
               Navigator.pop(context);
@@ -562,5 +564,58 @@ class _BoardEveryOnlineState extends State<BoardEveryOnline> {
         ],
       ),
     );
-  }*/
+  }
+
+  _deletePointFirestore(DateTime selectedPoint) async {
+    print(selectedPoint);
+
+    dynamic session = await FlutterSession().get('mySession');
+
+    await FirebaseFirestore.instance
+        .collection('teamList')
+        .doc(session['teamId'])
+        .collection('pointRecord')
+        .where("intTimeStamp", isEqualTo: Timestamp.fromDate(selectedPoint))
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        FirebaseFirestore.instance
+            .collection('teamList')
+            .doc(session['teamId'])
+            .collection('pointRecord')
+            .doc(element.id)
+            .delete()
+            .then((value) {
+          print("Success!");
+        });
+      });
+    });
+  }
+
+  _deleteScoreFirestore(DateTime selectedScore) async {
+    print(selectedScore);
+    print(DateTime.now());
+
+    dynamic session = await FlutterSession().get('mySession');
+
+    await FirebaseFirestore.instance
+        .collection('teamList')
+        .doc(session['teamId'])
+        .collection('scoreRecord')
+        .where("intTimeStamp", isEqualTo: Timestamp.fromDate(selectedScore))
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        FirebaseFirestore.instance
+            .collection('teamList')
+            .doc(session['teamId'])
+            .collection('scoreRecord')
+            .doc(element.id)
+            .delete()
+            .then((value) {
+          print("Success!");
+        });
+      });
+    });
+  }
 }

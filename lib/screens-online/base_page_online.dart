@@ -55,10 +55,10 @@ class _BasePageOnlineState extends State<BasePageOnline> {
 
   @override
   Widget build(BuildContext context) {
-    var interstitialRandom = math.Random().nextInt(5);
+    var interstitialRandom = math.Random().nextInt(7);
     var correct = 0;
     print(interstitialRandom);
-/*    if (interstitialRandom == correct) {
+    if (interstitialRandom == correct) {
       FirebaseAdMob.instance.initialize(appId: getAppId());
 
       InterstitialAd myInterstitial = InterstitialAd(
@@ -80,7 +80,7 @@ class _BasePageOnlineState extends State<BasePageOnline> {
           horizontalCenterOffset: 0.0,
         );
     }
-*/
+
     return Scaffold(
       body: _pageList[_selectedIndex],
       bottomNavigationBar: Column(

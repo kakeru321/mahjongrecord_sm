@@ -40,6 +40,13 @@ class _MemberEveryOnlineState extends State<MemberEveryOnline> {
   final InAppReview inAppReview = InAppReview.instance;
 
   @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
     _getAllPoint();

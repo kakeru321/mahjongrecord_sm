@@ -117,7 +117,7 @@ class _HomeScreenOnlineState extends State<HomeScreenOnline> {
             SizedBox(
               height: maxHeight * (5 / 100),
             ),
-            ButtonWithIconOnline(
+/*            ButtonWithIconOnline(
               onPressed: () => _editScreenTeam(),
               icon: Icon(
                 Icons.play_arrow,
@@ -135,7 +135,7 @@ class _HomeScreenOnlineState extends State<HomeScreenOnline> {
                 fontFamily: "Mont",
                 color: HexColor('f9f7f7'),
               ),
-            ),
+            ),*/
           ],
         ),
       ),

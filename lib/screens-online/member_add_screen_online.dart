@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mahjong_record_sm/formats/member-online.dart';
 import 'package:mahjong_record_sm/parts/hex_color.dart';
+import 'package:toast/toast.dart';
 import 'edit_screen_online.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_session/flutter_session.dart';
@@ -116,25 +117,24 @@ class _MemberAddScreenOnlineState extends State<MemberAddScreenOnline> {
           "${_memberList[position].memberName}",
           style: TextStyle(fontSize: 18, color: Colors.blueGrey),
         ),
-//        onLongPress: () => _deleteMember(_memberList[position]), TODO memberDelete
+        onLongPress: () => _deleteMember(_memberList[position].memberName),
       ),
     );
   }
 
-/*
   //メンバーを削除する。
-  _deleteMember(Member selectedMember) async {
+  _deleteMember(String selectedMember) async {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
-        title: Text(selectedMember.strMemberName),
+        title: Text(selectedMember),
         content: Text("削除しても良いですか？"),
         actions: [
           // ignore: deprecated_member_use
           FlatButton(
             onPressed: () async {
-              await database.deleteMember(selectedMember);
+              await _deleteMemberFirestore(selectedMember);
               Toast.show("削除完了しました", context);
               _getAllMember();
               Navigator.pop(context);
@@ -149,5 +149,29 @@ class _MemberAddScreenOnlineState extends State<MemberAddScreenOnline> {
         ],
       ),
     );
-  }*/
+  }
+
+  _deleteMemberFirestore(String selectedMember) async {
+    dynamic session = await FlutterSession().get('mySession');
+
+    await FirebaseFirestore.instance
+        .collection('teamList')
+        .doc(session['teamId'])
+        .collection('memberList')
+        .where("memberName", isEqualTo: selectedMember)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        FirebaseFirestore.instance
+            .collection('teamList')
+            .doc(session['teamId'])
+            .collection('memberList')
+            .doc(element.id)
+            .delete()
+            .then((value) {
+          print("Success!");
+        });
+      });
+    });
+  }
 }
