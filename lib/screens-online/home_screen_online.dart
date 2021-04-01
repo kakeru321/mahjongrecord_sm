@@ -1,10 +1,9 @@
-import 'dart:io';
+/* import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
-import 'package:mahjong_record_sm/parts/buttom_with_icon.dart';
 import 'package:mahjong_record_sm/parts/buttom_with_icon_online.dart';
 import 'package:mahjong_record_sm/parts/hex_color.dart';
 import 'package:mahjong_record_sm/parts/session_management.dart';
@@ -117,7 +116,7 @@ class _HomeScreenOnlineState extends State<HomeScreenOnline> {
             SizedBox(
               height: maxHeight * (5 / 100),
             ),
-/*            ButtonWithIconOnline(
+           ButtonWithIconOnline(
               onPressed: () => _editScreenTeam(),
               icon: Icon(
                 Icons.play_arrow,
@@ -135,7 +134,7 @@ class _HomeScreenOnlineState extends State<HomeScreenOnline> {
                 fontFamily: "Mont",
                 color: HexColor('f9f7f7'),
               ),
-            ),*/
+            ),
           ],
         ),
       ),
@@ -208,3 +207,4 @@ class _HomeScreenOnlineState extends State<HomeScreenOnline> {
     await FlutterSession().set('mySession', mySession);
   }
 }
+*/

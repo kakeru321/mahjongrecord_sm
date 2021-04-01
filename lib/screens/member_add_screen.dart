@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:mahjong_record_sm/db/database.dart';
-import 'package:mahjong_record_sm/screens-online/home_screen_online.dart';
 import 'package:toast/toast.dart';
 
 import '../main.dart';
@@ -47,16 +46,6 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
         centerTitle: true,
         automaticallyImplyLeading: false,
         backgroundColor: Colors.orange,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.done,
-              color: Colors.orange,
-            ),
-            tooltip: "test",
-            onPressed: () => _testPage(),
-          )
-        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _addNewMember(),
@@ -140,16 +129,6 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
             child: Text("いいえ"),
           )
         ],
-      ),
-    );
-  }
-
-  //テストページへ遷移する。
-  _testPage() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => HomeScreenOnline(),
       ),
     );
   }

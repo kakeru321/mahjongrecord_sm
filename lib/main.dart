@@ -1,7 +1,8 @@
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:mahjong_record_sm/db/database.dart';
 import 'package:flutter/material.dart';
-import 'package:mahjong_record_sm/screens/base_page.dart';
+
+import 'common/home_screen.dart';
 
 MyDatabase database;
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
         ),
         home: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
-          child: BasePage(),
+          child: HomeScreen(),
           //RecordInquiryScreen(),
         ));
   }
