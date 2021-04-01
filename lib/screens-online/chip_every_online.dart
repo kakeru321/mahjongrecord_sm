@@ -32,6 +32,7 @@ class _ChipEveryOnlineState extends State<ChipEveryOnline> {
   @override
   void initState() {
     super.initState();
+    _getAllMember();
     _getAllTip();
   }
 
@@ -295,7 +296,7 @@ class _ChipEveryOnlineState extends State<ChipEveryOnline> {
         ),
       );
     }
-    _getAllMember();
+//    _getAllMember();
   }
 
   //すべてのチップをリストにする。

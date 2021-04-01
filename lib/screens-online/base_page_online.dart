@@ -58,6 +58,7 @@ class _BasePageOnlineState extends State<BasePageOnline> {
     var interstitialRandom = math.Random().nextInt(7);
     var correct = 0;
     print(interstitialRandom);
+/*
     if (interstitialRandom == correct) {
       FirebaseAdMob.instance.initialize(appId: getAppId());
 
@@ -80,7 +81,7 @@ class _BasePageOnlineState extends State<BasePageOnline> {
           horizontalCenterOffset: 0.0,
         );
     }
-
+*/
     return Scaffold(
       body: _pageList[_selectedIndex],
       bottomNavigationBar: Column(

@@ -49,9 +49,9 @@ class _MemberEveryOnlineState extends State<MemberEveryOnline> {
   @override
   void initState() {
     super.initState();
+    _getAllMember();
     _getAllPoint();
     _getAllScore();
-    _getAllMember();
     _getReview();
   }
 
@@ -470,7 +470,7 @@ class _MemberEveryOnlineState extends State<MemberEveryOnline> {
       );
     }
     setMemberNameList();
-    setState(() {});
+//    setState(() {});
   }
 
   //すべてのメンバーをリスト化する。
@@ -530,7 +530,7 @@ class _MemberEveryOnlineState extends State<MemberEveryOnline> {
       }
       _calcSummaryScore2.add(_calcSummaryScore1);
     }
-    setState(() {});
+    //   setState(() {});
     _conclusionScore();
   }
 
