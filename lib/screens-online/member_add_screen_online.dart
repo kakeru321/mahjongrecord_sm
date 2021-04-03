@@ -61,7 +61,7 @@ class _MemberAddScreenOnlineState extends State<MemberAddScreenOnline> {
           SizedBox(
             height: maxHeight * (1 / 100),
           ),
-          SizedBox(height: maxHeight - 250.0, child: _memberListWidget()),
+          SizedBox(height: viewHeight(), child: _memberListWidget()),
         ],
       ),
     );
@@ -173,5 +173,23 @@ class _MemberAddScreenOnlineState extends State<MemberAddScreenOnline> {
         });
       });
     });
+  }
+
+  viewHeight() {
+    final size = MediaQuery.of(context).size;
+    final padding = MediaQuery.of(context).padding;
+    var maxHeight = size.height - padding.top - padding.bottom;
+
+    // アプリ描画エリアの縦サイズを取得
+    if (Platform.isAndroid) {
+      maxHeight = size.height - kToolbarHeight;
+    } else if (Platform.isIOS) {
+      maxHeight = size.height;
+    }
+    if (maxHeight >= 800) {
+      return maxHeight - 250.0;
+    } else {
+      return maxHeight - 175.0;
+    }
   }
 }

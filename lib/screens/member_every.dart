@@ -67,7 +67,7 @@ class _MemberEveryState extends State<MemberEvery> {
             ),
             _radioButtons(),
             _conclusionRadioButtons(),
-            SizedBox(height: maxHeight - 375.0, child: _pointScoreListWidget()),
+            SizedBox(height: viewHeight(), child: _pointScoreListWidget()),
           ],
         ),
       ),
@@ -548,6 +548,24 @@ class _MemberEveryState extends State<MemberEvery> {
   void _getReview() async {
     if (await inAppReview.isAvailable()) {
       inAppReview.requestReview();
+    }
+  }
+
+  viewHeight() {
+    final size = MediaQuery.of(context).size;
+    final padding = MediaQuery.of(context).padding;
+    var maxHeight = size.height - padding.top - padding.bottom;
+
+    // アプリ描画エリアの縦サイズを取得
+    if (Platform.isAndroid) {
+      maxHeight = size.height - kToolbarHeight;
+    } else if (Platform.isIOS) {
+      maxHeight = size.height;
+    }
+    if (maxHeight >= 800) {
+      return maxHeight - 245.0;
+    } else {
+      return maxHeight - 170.0;
     }
   }
 }

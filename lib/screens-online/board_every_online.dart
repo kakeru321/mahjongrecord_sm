@@ -59,7 +59,7 @@ class _BoardEveryOnlineState extends State<BoardEveryOnline> {
               endIndent: 3.0,
               thickness: 1,
             ),
-            SizedBox(height: maxHeight - 375.0, child: _pointScoreListWidget()),
+            SizedBox(height: viewHeight(), child: _pointScoreListWidget()),
           ],
         ),
       ),
@@ -593,9 +593,6 @@ class _BoardEveryOnlineState extends State<BoardEveryOnline> {
   }
 
   _deleteScoreFirestore(DateTime selectedScore) async {
-    print(selectedScore);
-    print(DateTime.now());
-
     dynamic session = await FlutterSession().get('mySession');
 
     await FirebaseFirestore.instance
@@ -617,5 +614,23 @@ class _BoardEveryOnlineState extends State<BoardEveryOnline> {
         });
       });
     });
+  }
+
+  viewHeight() {
+    final size = MediaQuery.of(context).size;
+    final padding = MediaQuery.of(context).padding;
+    var maxHeight = size.height - padding.top - padding.bottom;
+
+    // アプリ描画エリアの縦サイズを取得
+    if (Platform.isAndroid) {
+      maxHeight = size.height - kToolbarHeight;
+    } else if (Platform.isIOS) {
+      maxHeight = size.height;
+    }
+    if (maxHeight >= 800) {
+      return maxHeight - 400.0;
+    } else {
+      return maxHeight - 325.0;
+    }
   }
 }

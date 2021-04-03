@@ -55,7 +55,7 @@ class _ChipEveryState extends State<ChipEvery> {
             ),
             _radioButtons(),
             _conclusionRadioButtons(),
-            SizedBox(height: maxHeight - 220.0, child: _tipListWidget()),
+            SizedBox(height: viewHeight(), child: _tipListWidget()),
           ],
         ),
       ),
@@ -436,5 +436,23 @@ class _ChipEveryState extends State<ChipEvery> {
           duration: Toast.LENGTH_SHORT);
     }
     setState(() {});
+  }
+
+  viewHeight() {
+    final size = MediaQuery.of(context).size;
+    final padding = MediaQuery.of(context).padding;
+    var maxHeight = size.height - padding.top - padding.bottom;
+
+    // アプリ描画エリアの縦サイズを取得
+    if (Platform.isAndroid) {
+      maxHeight = size.height - kToolbarHeight;
+    } else if (Platform.isIOS) {
+      maxHeight = size.height;
+    }
+    if (maxHeight >= 800) {
+      return maxHeight - 245.0;
+    } else {
+      return maxHeight - 170.0;
+    }
   }
 }

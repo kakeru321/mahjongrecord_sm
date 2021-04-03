@@ -72,7 +72,7 @@ class _LogInState extends State<LogIn> {
                     child: Text(
                       "チームアカウントでログインしてください。",
                       style:
-                          TextStyle(fontSize: 14.0, color: HexColor('3f72af')),
+                          TextStyle(fontSize: 12.0, color: HexColor('3f72af')),
                     ),
                   ),
                 ),
@@ -85,7 +85,7 @@ class _LogInState extends State<LogIn> {
                     child: Text(
                       "チームメンバーとデータを共有できます。",
                       style:
-                          TextStyle(fontSize: 14.0, color: HexColor('3f72af')),
+                          TextStyle(fontSize: 12.0, color: HexColor('3f72af')),
                     ),
                   ),
                 ),
@@ -98,7 +98,7 @@ class _LogInState extends State<LogIn> {
                     child: Text(
                       "ログイン後、初めに【メンバー管理画面】から",
                       style:
-                          TextStyle(fontSize: 14.0, color: HexColor('3f72af')),
+                          TextStyle(fontSize: 12.0, color: HexColor('3f72af')),
                     ),
                   ),
                 ),
@@ -108,7 +108,7 @@ class _LogInState extends State<LogIn> {
                     child: Text(
                       "【対局者名を登録】してください。",
                       style:
-                          TextStyle(fontSize: 14.0, color: HexColor('3f72af')),
+                          TextStyle(fontSize: 12.0, color: HexColor('3f72af')),
                     ),
                   ),
                 ),
@@ -116,7 +116,7 @@ class _LogInState extends State<LogIn> {
                   height: maxHeight * (5 / 100),
                 ),
                 SizedBox(
-                  height: maxHeight * (10 / 100),
+                  height: maxHeight * (15 / 100),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Center(
@@ -132,7 +132,7 @@ class _LogInState extends State<LogIn> {
                   ),
                 ),
                 SizedBox(
-                  height: maxHeight * (10 / 100),
+                  height: maxHeight * (15 / 100),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Center(
