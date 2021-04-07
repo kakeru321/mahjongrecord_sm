@@ -31,7 +31,7 @@ class _EditScreenTeamState extends State<EditScreenTeam> {
 
     // アプリ描画エリアの縦サイズを取得
     if (Platform.isAndroid) {
-      maxHeight = size.height - kToolbarHeight;
+      maxHeight = size.height - kToolbarHeight + 50;
     } else if (Platform.isIOS) {
       maxHeight = size.height;
     }
@@ -110,7 +110,7 @@ class _EditScreenTeamState extends State<EditScreenTeam> {
                   height: maxHeight * (5 / 100),
                 ),
                 SizedBox(
-                  height: maxHeight * (10 / 100),
+                  height: maxHeight * (15 / 100),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Center(
@@ -126,7 +126,7 @@ class _EditScreenTeamState extends State<EditScreenTeam> {
                   ),
                 ),
                 SizedBox(
-                  height: maxHeight * (10 / 100),
+                  height: maxHeight * (15 / 100),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Center(

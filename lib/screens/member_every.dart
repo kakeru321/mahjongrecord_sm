@@ -558,14 +558,22 @@ class _MemberEveryState extends State<MemberEvery> {
 
     // アプリ描画エリアの縦サイズを取得
     if (Platform.isAndroid) {
-      maxHeight = size.height - kToolbarHeight;
+      if (maxHeight >= 800) {
+        maxHeight = size.height - kToolbarHeight - 195.0;
+        return maxHeight;
+      } else {
+        maxHeight = size.height - kToolbarHeight - 150.0;
+        return maxHeight;
+      }
     } else if (Platform.isIOS) {
-      maxHeight = size.height;
-    }
-    if (maxHeight >= 800) {
-      return maxHeight - 245.0;
-    } else {
-      return maxHeight - 170.0;
+      if (maxHeight >= 800) {
+        maxHeight = size.height - 245.0;
+        return maxHeight;
+      } else {
+        maxHeight = size.height - 170.0;
+        print(maxHeight);
+        return maxHeight;
+      }
     }
   }
 }

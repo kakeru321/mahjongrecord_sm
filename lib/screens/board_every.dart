@@ -514,14 +514,22 @@ class _BoardEveryState extends State<BoardEvery> {
 
     // アプリ描画エリアの縦サイズを取得
     if (Platform.isAndroid) {
-      maxHeight = size.height - kToolbarHeight;
+      if (maxHeight >= 800) {
+        maxHeight = size.height - kToolbarHeight - 350.0;
+        return maxHeight;
+      } else {
+        maxHeight = size.height - kToolbarHeight - 275.0;
+        return maxHeight;
+      }
     } else if (Platform.isIOS) {
-      maxHeight = size.height;
-    }
-    if (maxHeight >= 800) {
-      return maxHeight - 400.0;
-    } else {
-      return maxHeight - 325.0;
+      if (maxHeight >= 800) {
+        maxHeight = size.height - 400.0;
+        return maxHeight;
+      } else {
+        maxHeight = size.height - 325.0;
+        print(maxHeight);
+        return maxHeight;
+      }
     }
   }
 }

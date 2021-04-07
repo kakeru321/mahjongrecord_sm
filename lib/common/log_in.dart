@@ -34,7 +34,7 @@ class _LogInState extends State<LogIn> {
 
     // アプリ描画エリアの縦サイズを取得
     if (Platform.isAndroid) {
-      maxHeight = size.height - kToolbarHeight;
+      maxHeight = size.height - kToolbarHeight + 50;
     } else if (Platform.isIOS) {
       maxHeight = size.height;
     }

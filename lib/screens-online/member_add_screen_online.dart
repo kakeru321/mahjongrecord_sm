@@ -182,14 +182,22 @@ class _MemberAddScreenOnlineState extends State<MemberAddScreenOnline> {
 
     // アプリ描画エリアの縦サイズを取得
     if (Platform.isAndroid) {
-      maxHeight = size.height - kToolbarHeight;
+      if (maxHeight >= 800) {
+        maxHeight = size.height - kToolbarHeight - 200.0;
+        return maxHeight;
+      } else {
+        maxHeight = size.height - kToolbarHeight - 150.0;
+        return maxHeight;
+      }
     } else if (Platform.isIOS) {
-      maxHeight = size.height;
-    }
-    if (maxHeight >= 800) {
-      return maxHeight - 250.0;
-    } else {
-      return maxHeight - 175.0;
+      if (maxHeight >= 800) {
+        maxHeight = size.height - 250.0;
+        return maxHeight;
+      } else {
+        maxHeight = size.height - 200.0;
+        print(maxHeight);
+        return maxHeight;
+      }
     }
   }
 }
