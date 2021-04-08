@@ -1,6 +1,7 @@
 import 'dart:io';
-
+import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:intl/intl.dart';
@@ -15,6 +16,30 @@ class BoardEveryOnline extends StatefulWidget {
 }
 
 class _BoardEveryOnlineState extends State<BoardEveryOnline> {
+  static String getAppId() {
+    if (Platform.isIOS) {
+      return 'ca-app-pub-7104775285154830~1946964690';
+    } else if (Platform.isAndroid) {
+      return 'ca-app-pub-7104775285154830~1946964690';
+    }
+    return null;
+  }
+
+  static String getInterstitialAdUnitId() {
+    if (Platform.isIOS) {
+      return 'ca-app-pub-7104775285154830/5999235244';
+    } else if (Platform.isAndroid) {
+      return 'ca-app-pub-7104775285154830/9525215581';
+    }
+    return null;
+  }
+
+  MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+    keywords: <String>['flutterio', 'beautiful apps'],
+    contentUrl: 'https://flutter.io',
+    childDirected: false,
+    testDevices: <String>[], // Android emulators are considered test devices
+  );
   int periodSelect = 1;
 
   List<PointOnline> _pointList = [];
@@ -27,6 +52,7 @@ class _BoardEveryOnlineState extends State<BoardEveryOnline> {
     super.initState();
     _getAllPoint();
     _getAllScore();
+    interstitialAds();
   }
 
   @override
@@ -266,6 +292,11 @@ class _BoardEveryOnlineState extends State<BoardEveryOnline> {
     _pointList.sort((a, b) => b.intTimeStamp.compareTo(a.intTimeStamp));
     _scoreList.sort((a, b) => b.intTimeStamp.compareTo(a.intTimeStamp));
 
+    //カード内の"width"と"height"の定義
+    double nameWidth = maxWidth * (30 / 100);
+    double pointWidth = maxWidth * (30 / 100);
+    double scoreWidth = maxWidth * (29 / 100);
+
     if (periodSelect == 2) {
       if (_duration > 720) {
         return;
@@ -288,7 +319,9 @@ class _BoardEveryOnlineState extends State<BoardEveryOnline> {
           height: 40,
           child: Container(
             decoration: BoxDecoration(
-              border: Border.all(color: HexColor('112d4e'), width: 3),
+              border: Border(
+                bottom: BorderSide(color: HexColor('112d4e'), width: 2),
+              ),
               color: HexColor('3f72af'),
             ),
             child: FlatButton(
@@ -307,231 +340,249 @@ class _BoardEveryOnlineState extends State<BoardEveryOnline> {
             ),
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SizedBox(
-              width: maxWidth * (30 / 100),
-              child: Center(
-                child: Text(
-                  "${_pointList[position].strFirstMemberName}",
-                  style: TextStyle(fontSize: 20.0),
+        SizedBox(
+          width: maxWidth,
+          child: Container(
+            decoration: BoxDecoration(
+//              border: Border.all(color: HexColor('112d4e'), width: 3),
                 ),
-              ),
-            ),
-            SizedBox(
-              width: maxWidth * (30 / 100),
+            child: FlatButton(
+              onPressed: null,
               child: Column(
                 children: [
-                  Center(
-                    child: Text(
-                      "持点（点）",
-                      style: TextStyle(fontSize: 8.0),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: nameWidth,
+                        child: Center(
+                          child: Text(
+                            "${_pointList[position].strFirstMemberName}",
+                            style: TextStyle(fontSize: 20.0),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: pointWidth,
+                        child: Column(
+                          children: [
+                            Center(
+                              child: Text(
+                                "持点（点）",
+                                style: TextStyle(fontSize: 8.0),
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                "${_pointList[position].intFirstPoint}",
+                                style: TextStyle(fontSize: 16.0),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: scoreWidth,
+                        child: Column(
+                          children: [
+                            Center(
+                              child: Text(
+                                "得点（P）",
+                                style: TextStyle(fontSize: 8.0),
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                "${_scoreList[position].intFirstScore}",
+                                style: TextStyle(fontSize: 16.0),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  Center(
-                    child: Text(
-                      "${_pointList[position].intFirstPoint}",
-                      style: TextStyle(fontSize: 16.0),
-                    ),
+                  Divider(
+                    height: 3.0,
+                    color: HexColor('112d4e'),
+                    indent: 8.0,
+                    endIndent: 8.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: nameWidth,
+                        child: Center(
+                          child: Text(
+                            "${_pointList[position].strSecondMemberName}",
+                            style: TextStyle(fontSize: 20.0),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: pointWidth,
+                        child: Column(
+                          children: [
+                            Center(
+                              child: Text(
+                                "持点（点）",
+                                style: TextStyle(fontSize: 8.0),
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                "${_pointList[position].intSecondPoint}",
+                                style: TextStyle(fontSize: 16.0),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: scoreWidth,
+                        child: Column(
+                          children: [
+                            Center(
+                              child: Text(
+                                "得点（P）",
+                                style: TextStyle(fontSize: 8.0),
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                "${_scoreList[position].intSecondScore}",
+                                style: TextStyle(fontSize: 16.0),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    height: 3.0,
+                    color: HexColor('112d4e'),
+                    indent: 8.0,
+                    endIndent: 8.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: nameWidth,
+                        child: Center(
+                          child: Text(
+                            "${_pointList[position].strThirdMemberName}",
+                            style: TextStyle(fontSize: 20.0),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: pointWidth,
+                        child: Column(
+                          children: [
+                            Center(
+                              child: Text(
+                                "持点（点）",
+                                style: TextStyle(fontSize: 8.0),
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                "${_pointList[position].intThirdPoint}",
+                                style: TextStyle(fontSize: 16.0),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: scoreWidth,
+                        child: Column(
+                          children: [
+                            Center(
+                              child: Text(
+                                "得点（P）",
+                                style: TextStyle(fontSize: 8.0),
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                "${_scoreList[position].intThirdScore}",
+                                style: TextStyle(fontSize: 16.0),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    height: 3.0,
+                    color: HexColor('112d4e'),
+                    indent: 8.0,
+                    endIndent: 8.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: nameWidth,
+                        child: Center(
+                          child: Text(
+                            "${_pointList[position].strForthMemberName}",
+                            style: TextStyle(fontSize: 20.0),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: pointWidth,
+                        child: Column(
+                          children: [
+                            Center(
+                              child: Text(
+                                "持点（点）",
+                                style: TextStyle(fontSize: 8.0),
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                "${_pointList[position].intForthPoint}",
+                                style: TextStyle(fontSize: 16.0),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: scoreWidth,
+                        child: Column(
+                          children: [
+                            Center(
+                              child: Text(
+                                "得点（P）",
+                                style: TextStyle(fontSize: 8.0),
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                "${_scoreList[position].intForthScore}",
+                                style: TextStyle(fontSize: 16.0),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
+              onLongPress: () => _deletePointScore(
+                  _pointList[position].intTimeStamp,
+                  _scoreList[position].intTimeStamp),
             ),
-            SizedBox(
-              width: maxWidth * (30 / 100),
-              child: Column(
-                children: [
-                  Center(
-                    child: Text(
-                      "得点（P）",
-                      style: TextStyle(fontSize: 8.0),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      "${_scoreList[position].intFirstScore}",
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        Divider(
-          height: 3.0,
-          color: HexColor('112d4e'),
-          indent: 8.0,
-          endIndent: 8.0,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SizedBox(
-              width: maxWidth * (30 / 100),
-              child: Center(
-                child: Text(
-                  "${_pointList[position].strSecondMemberName}",
-                  style: TextStyle(fontSize: 20.0),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: maxWidth * (30 / 100),
-              child: Column(
-                children: [
-                  Center(
-                    child: Text(
-                      "持点（点）",
-                      style: TextStyle(fontSize: 8.0),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      "${_pointList[position].intSecondPoint}",
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: maxWidth * (30 / 100),
-              child: Column(
-                children: [
-                  Center(
-                    child: Text(
-                      "得点（P）",
-                      style: TextStyle(fontSize: 8.0),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      "${_scoreList[position].intSecondScore}",
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        Divider(
-          height: 3.0,
-          color: HexColor('112d4e'),
-          indent: 8.0,
-          endIndent: 8.0,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SizedBox(
-              width: maxWidth * (30 / 100),
-              child: Center(
-                child: Text(
-                  "${_pointList[position].strThirdMemberName}",
-                  style: TextStyle(fontSize: 20.0),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: maxWidth * (30 / 100),
-              child: Column(
-                children: [
-                  Center(
-                    child: Text(
-                      "持点（点）",
-                      style: TextStyle(fontSize: 8.0),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      "${_pointList[position].intThirdPoint}",
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: maxWidth * (30 / 100),
-              child: Column(
-                children: [
-                  Center(
-                    child: Text(
-                      "得点（P）",
-                      style: TextStyle(fontSize: 8.0),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      "${_scoreList[position].intThirdScore}",
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        Divider(
-          height: 3.0,
-          color: HexColor('112d4e'),
-          indent: 8.0,
-          endIndent: 8.0,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SizedBox(
-              width: maxWidth * (30 / 100),
-              child: Center(
-                child: Text(
-                  "${_pointList[position].strForthMemberName}",
-                  style: TextStyle(fontSize: 20.0),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: maxWidth * (30 / 100),
-              child: Column(
-                children: [
-                  Center(
-                    child: Text(
-                      "持点（点）",
-                      style: TextStyle(fontSize: 8.0),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      "${_pointList[position].intForthPoint}",
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: maxWidth * (30 / 100),
-              child: Column(
-                children: [
-                  Center(
-                    child: Text(
-                      "得点（P）",
-                      style: TextStyle(fontSize: 8.0),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      "${_scoreList[position].intForthScore}",
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ],
     );
@@ -623,7 +674,7 @@ class _BoardEveryOnlineState extends State<BoardEveryOnline> {
 
     // アプリ描画エリアの縦サイズを取得
     if (Platform.isAndroid) {
-      if (maxHeight >= 800) {
+      if (maxHeight >= 750) {
         maxHeight = size.height - kToolbarHeight - 350.0;
         return maxHeight;
       } else {
@@ -631,14 +682,42 @@ class _BoardEveryOnlineState extends State<BoardEveryOnline> {
         return maxHeight;
       }
     } else if (Platform.isIOS) {
-      if (maxHeight >= 800) {
+      if (maxHeight >= 750) {
         maxHeight = size.height - 400.0;
         return maxHeight;
       } else {
         maxHeight = size.height - 325.0;
-        print(maxHeight);
         return maxHeight;
       }
+    }
+  }
+
+  interstitialAds() {
+    var interstitialRandom = math.Random().nextInt(10);
+    var correct = 0;
+    print(interstitialRandom);
+
+    if (interstitialRandom == correct) {
+      FirebaseAdMob.instance.initialize(appId: getAppId());
+
+      InterstitialAd myInterstitial = InterstitialAd(
+        // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+        // https://developers.google.com/admob/android/test-ads
+        // https://developers.google.com/admob/ios/test-ads
+        adUnitId: getInterstitialAdUnitId(),
+        targetingInfo: targetingInfo,
+        listener: (MobileAdEvent event) {
+          print("InterstitialAd event is $event");
+        },
+      );
+
+      myInterstitial
+        ..load()
+        ..show(
+          anchorType: AnchorType.bottom,
+          anchorOffset: 0.0,
+          horizontalCenterOffset: 0.0,
+        );
     }
   }
 }

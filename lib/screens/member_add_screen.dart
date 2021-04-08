@@ -140,7 +140,7 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
 
     // アプリ描画エリアの縦サイズを取得
     if (Platform.isAndroid) {
-      if (maxHeight >= 800) {
+      if (maxHeight >= 750) {
         maxHeight = size.height - kToolbarHeight - 200.0;
         return maxHeight;
       } else {
@@ -148,7 +148,7 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
         return maxHeight;
       }
     } else if (Platform.isIOS) {
-      if (maxHeight >= 800) {
+      if (maxHeight >= 750) {
         maxHeight = size.height - 250.0;
         return maxHeight;
       } else {

@@ -1,7 +1,4 @@
-import 'dart:io';
-import 'dart:math' as math;
 import 'package:admob_flutter/admob_flutter.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:mahjong_record_sm/parts/hex_color.dart';
 import 'package:mahjong_record_sm/screens-online/member_add_screen_online.dart';
@@ -28,6 +25,7 @@ class _BasePageOnlineState extends State<BasePageOnline> {
     });
   }
 
+/*
   static String getAppId() {
     if (Platform.isIOS) {
       return 'ca-app-pub-7104775285154830~1946964690';
@@ -52,9 +50,10 @@ class _BasePageOnlineState extends State<BasePageOnline> {
     childDirected: false,
     testDevices: <String>[], // Android emulators are considered test devices
   );
-
+*/
   @override
   Widget build(BuildContext context) {
+/*
     var interstitialRandom = math.Random().nextInt(10);
     var correct = 0;
     print(interstitialRandom);
@@ -81,7 +80,7 @@ class _BasePageOnlineState extends State<BasePageOnline> {
           horizontalCenterOffset: 0.0,
         );
     }
-
+*/
     return Scaffold(
       body: _pageList[_selectedIndex],
       bottomNavigationBar: Column(

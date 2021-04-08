@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_session/flutter_session.dart';
@@ -15,6 +15,31 @@ class PointRecordAddOnline extends StatefulWidget {
 }
 
 class _PointRecordAddOnlineState extends State<PointRecordAddOnline> {
+  static String getAppId() {
+    if (Platform.isIOS) {
+      return 'ca-app-pub-7104775285154830~1946964690';
+    } else if (Platform.isAndroid) {
+      return 'ca-app-pub-7104775285154830~1946964690';
+    }
+    return null;
+  }
+
+  static String getInterstitialAdUnitId() {
+    if (Platform.isIOS) {
+      return 'ca-app-pub-7104775285154830/5999235244';
+    } else if (Platform.isAndroid) {
+      return 'ca-app-pub-7104775285154830/9525215581';
+    }
+    return null;
+  }
+
+  MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+    keywords: <String>['flutterio', 'beautiful apps'],
+    contentUrl: 'https://flutter.io',
+    childDirected: false,
+    testDevices: <String>[], // Android emulators are considered test devices
+  );
+
   var firstMemberNameController = TextEditingController();
   var secondMemberNameController = TextEditingController();
   var thirdMemberNameController = TextEditingController();
@@ -482,9 +507,8 @@ class _PointRecordAddOnlineState extends State<PointRecordAddOnline> {
     }
     _uniqueCheck = null;
     _insertPoint();
-
     Toast.show("登録完了しました。", context, duration: Toast.LENGTH_SHORT);
-
+    interstitialAds();
     setState(() {});
   }
 
@@ -617,5 +641,28 @@ class _PointRecordAddOnlineState extends State<PointRecordAddOnline> {
     secondPointController.clear();
     thirdPointController.clear();
     forthPointController.clear();
+  }
+
+  interstitialAds() {
+    FirebaseAdMob.instance.initialize(appId: getAppId());
+
+    InterstitialAd myInterstitial = InterstitialAd(
+      // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+      // https://developers.google.com/admob/android/test-ads
+      // https://developers.google.com/admob/ios/test-ads
+      adUnitId: getInterstitialAdUnitId(),
+      targetingInfo: targetingInfo,
+      listener: (MobileAdEvent event) {
+        print("InterstitialAd event is $event");
+      },
+    );
+
+    myInterstitial
+      ..load()
+      ..show(
+        anchorType: AnchorType.bottom,
+        anchorOffset: 0.0,
+        horizontalCenterOffset: 0.0,
+      );
   }
 }

@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:mahjong_record_sm/formats/member-online.dart';
 import 'package:mahjong_record_sm/parts/hex_color.dart';
@@ -14,6 +14,12 @@ class MemberAddScreenOnline extends StatefulWidget {
 }
 
 class _MemberAddScreenOnlineState extends State<MemberAddScreenOnline> {
+  MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+    keywords: <String>['flutterio', 'beautiful apps'],
+    contentUrl: 'https://flutter.io',
+    childDirected: false,
+    testDevices: <String>[], // Android emulators are considered test devices
+  );
   List<MemberOnline> _memberList = [];
 
   @override
@@ -182,7 +188,7 @@ class _MemberAddScreenOnlineState extends State<MemberAddScreenOnline> {
 
     // アプリ描画エリアの縦サイズを取得
     if (Platform.isAndroid) {
-      if (maxHeight >= 800) {
+      if (maxHeight >= 750) {
         maxHeight = size.height - kToolbarHeight - 200.0;
         return maxHeight;
       } else {
@@ -190,12 +196,12 @@ class _MemberAddScreenOnlineState extends State<MemberAddScreenOnline> {
         return maxHeight;
       }
     } else if (Platform.isIOS) {
-      if (maxHeight >= 800) {
+      if (maxHeight >= 750) {
         maxHeight = size.height - 250.0;
         return maxHeight;
       } else {
-        maxHeight = size.height - 200.0;
-        print(maxHeight);
+        maxHeight = size.height - 150.0;
+
         return maxHeight;
       }
     }

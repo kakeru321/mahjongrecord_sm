@@ -514,7 +514,7 @@ class _BoardEveryState extends State<BoardEvery> {
 
     // アプリ描画エリアの縦サイズを取得
     if (Platform.isAndroid) {
-      if (maxHeight >= 800) {
+      if (maxHeight >= 750) {
         maxHeight = size.height - kToolbarHeight - 350.0;
         return maxHeight;
       } else {
@@ -522,7 +522,7 @@ class _BoardEveryState extends State<BoardEvery> {
         return maxHeight;
       }
     } else if (Platform.isIOS) {
-      if (maxHeight >= 800) {
+      if (maxHeight >= 750) {
         maxHeight = size.height - 400.0;
         return maxHeight;
       } else {

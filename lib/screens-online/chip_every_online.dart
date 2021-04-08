@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:mahjong_record_sm/formats/member-online.dart';
@@ -15,6 +17,30 @@ class ChipEveryOnline extends StatefulWidget {
 }
 
 class _ChipEveryOnlineState extends State<ChipEveryOnline> {
+  static String getAppId() {
+    if (Platform.isIOS) {
+      return 'ca-app-pub-7104775285154830~1946964690';
+    } else if (Platform.isAndroid) {
+      return 'ca-app-pub-7104775285154830~1946964690';
+    }
+    return null;
+  }
+
+  static String getInterstitialAdUnitId() {
+    if (Platform.isIOS) {
+      return 'ca-app-pub-7104775285154830/5999235244';
+    } else if (Platform.isAndroid) {
+      return 'ca-app-pub-7104775285154830/9525215581';
+    }
+    return null;
+  }
+
+  MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+    keywords: <String>['flutterio', 'beautiful apps'],
+    contentUrl: 'https://flutter.io',
+    childDirected: false,
+    testDevices: <String>[], // Android emulators are considered test devices
+  );
   List<int> _calcMemberNumberList = [];
   int _calcSummaryScore1 = 0;
   List<MemberOnline> _memberList = [];
@@ -34,6 +60,7 @@ class _ChipEveryOnlineState extends State<ChipEveryOnline> {
     super.initState();
     _getAllMember();
     _getAllTip();
+    interstitialAds();
   }
 
   @override
@@ -493,7 +520,7 @@ class _ChipEveryOnlineState extends State<ChipEveryOnline> {
 
     // アプリ描画エリアの縦サイズを取得
     if (Platform.isAndroid) {
-      if (maxHeight >= 800) {
+      if (maxHeight >= 750) {
         maxHeight = size.height - kToolbarHeight - 195.0;
         return maxHeight;
       } else {
@@ -501,14 +528,42 @@ class _ChipEveryOnlineState extends State<ChipEveryOnline> {
         return maxHeight;
       }
     } else if (Platform.isIOS) {
-      if (maxHeight >= 800) {
+      if (maxHeight >= 750) {
         maxHeight = size.height - 245.0;
         return maxHeight;
       } else {
         maxHeight = size.height - 170.0;
-        print(maxHeight);
         return maxHeight;
       }
+    }
+  }
+
+  interstitialAds() {
+    var interstitialRandom = math.Random().nextInt(10);
+    var correct = 0;
+    print(interstitialRandom);
+
+    if (interstitialRandom == correct) {
+      FirebaseAdMob.instance.initialize(appId: getAppId());
+
+      InterstitialAd myInterstitial = InterstitialAd(
+        // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+        // https://developers.google.com/admob/android/test-ads
+        // https://developers.google.com/admob/ios/test-ads
+        adUnitId: getInterstitialAdUnitId(),
+        targetingInfo: targetingInfo,
+        listener: (MobileAdEvent event) {
+          print("InterstitialAd event is $event");
+        },
+      );
+
+      myInterstitial
+        ..load()
+        ..show(
+          anchorType: AnchorType.bottom,
+          anchorOffset: 0.0,
+          horizontalCenterOffset: 0.0,
+        );
     }
   }
 }
