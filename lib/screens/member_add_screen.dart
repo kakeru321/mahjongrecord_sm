@@ -153,7 +153,6 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
         return maxHeight;
       } else {
         maxHeight = size.height - 200.0;
-        print(maxHeight);
         return maxHeight;
       }
     }

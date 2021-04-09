@@ -200,8 +200,7 @@ class _MemberAddScreenOnlineState extends State<MemberAddScreenOnline> {
         maxHeight = size.height - 250.0;
         return maxHeight;
       } else {
-        maxHeight = size.height - 150.0;
-
+        maxHeight = size.height - 200.0;
         return maxHeight;
       }
     }
