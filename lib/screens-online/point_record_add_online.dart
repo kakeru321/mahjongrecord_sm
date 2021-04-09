@@ -288,7 +288,7 @@ class _PointRecordAddOnlineState extends State<PointRecordAddOnline> {
           "点",
           style: TextStyle(
             fontSize: 28.0,
-            color: Colors.white,
+            color: HexColor('3f72af'),
           ),
         ),
       ],
@@ -346,7 +346,7 @@ class _PointRecordAddOnlineState extends State<PointRecordAddOnline> {
           "点",
           style: TextStyle(
             fontSize: 28.0,
-            color: Colors.white,
+            color: HexColor('3f72af'),
           ),
         ),
       ],
@@ -404,7 +404,7 @@ class _PointRecordAddOnlineState extends State<PointRecordAddOnline> {
           "点",
           style: TextStyle(
             fontSize: 28.0,
-            color: Colors.white,
+            color: HexColor('3f72af'),
           ),
         )
       ],
@@ -462,7 +462,7 @@ class _PointRecordAddOnlineState extends State<PointRecordAddOnline> {
           "点",
           style: TextStyle(
             fontSize: 28.0,
-            color: Colors.white,
+            color: HexColor('3f72af'),
           ),
         )
       ],

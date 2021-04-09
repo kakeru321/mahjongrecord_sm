@@ -87,7 +87,7 @@ class _BasePageOnlineState extends State<BasePageOnline> {
           mainAxisAlignment: MainAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           children: [
-            AdmobBanner(
+/*            AdmobBanner(
               adUnitId: AdMobService().getBannerAdUnitId(),
               adSize: AdmobBannerSize(
                 width: MediaQuery.of(context).size.width.toInt(),
@@ -95,6 +95,7 @@ class _BasePageOnlineState extends State<BasePageOnline> {
                 name: 'SMART_BANNER',
               ),
             ),
+*/
             BottomNavigationBar(
               backgroundColor: HexColor('3f72af'),
               selectedItemColor: HexColor('f9f7f7'),
